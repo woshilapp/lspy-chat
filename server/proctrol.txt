@@ -1,0 +1,14 @@
+c200: set name n
+c201: send msg m
+c202: list online
+
+s300: set suss
+s301: already set
+s302: name illegit
+s303: not set
+s304: kicked
+s305: banned
+
+s400: client msg m, u
+s401: server msg m
+s410: online list l
