@@ -45,8 +45,6 @@ And pay attention to capitalization!
 + **Commandline**
 It has help message, so you can read it (I won't write it again once)
 
-<br>
-
 + **GUI**
 I will take you step by step to use it
 <pre>
