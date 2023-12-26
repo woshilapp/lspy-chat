@@ -1,0 +1,7 @@
+#the config file of lspy-chat server
+network:
+  ip : "127.0.0.1"
+  port : 6999
+
+log:
+  enable : true
