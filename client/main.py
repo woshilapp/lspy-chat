@@ -33,7 +33,7 @@ class mainclient(object):
         global sock
         while True:
             try:
-                data = sock.recv(2048).decode("utf-8")
+                data = sock.recv(512).decode("utf-8")
                 if data == '':
                     printf("Disconnect from server")
                     self.recvth = Thread(target=self.recvthread,daemon=True)

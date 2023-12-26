@@ -3,6 +3,7 @@
 import socket,json,threading,logging,os,time,yaml,re
 from prompt_toolkit import prompt,print_formatted_text as printf
 from prompt_toolkit.history import InMemoryHistory
+from src import *
 
 class myconhandler(logging.StreamHandler): #重写StreamHandler实现切换输出函数的功能
     def emit(self, record):
@@ -14,35 +15,6 @@ class myconhandler(logging.StreamHandler): #重写StreamHandler实现切换输�
             self.flush()
         except Exception:
             self.handleError(record)
-
-class EventManager: #events
-    def __init__(self): #self
-        self.events = {}
-
-    def reg_event(self, event_type, func):
-        if event_type in self.events:
-            self.events[event_type].append(func)
-        else:
-            self.events[event_type] = [func]
-
-    def remove_event(self, event_type, func):
-        if event_type in self.events:
-            if func in self.events[event_type]:
-                self.events[event_type].remove(func)
-
-    def patch_event(self, event_type, conn, *args, **kwargs):
-        if event_type in self.events:
-            for func in self.events[event_type]:
-                func(conn, *args, **kwargs)
-        else:
-            logger.warning(connaddr[conn]+" sent a badpacket")
-            #send 0
-
-    def init_event(self):
-        self.reg_event("0", p0)
-        self.reg_event("200", p200)
-        self.reg_event("201", p201)
-        self.reg_event("202", p202)
 
 filehandler = logging.FileHandler(filename='./data/server.log',mode='a',encoding='utf-8')
 filehandler.setFormatter(logging.Formatter("[%(levelname)s][%(asctime)s]%(message)s",datefmt="%Y-%m-%d %H:%M:%S"))
@@ -75,6 +47,7 @@ try:
     sock.bind((ip, port))
 except OSError:
     logger.error("The port or address already use")
+
 sock.settimeout(3)
 sock.setblocking(False)
 sock.listen(10)
@@ -87,6 +60,12 @@ online = {} #online user(sock:name)
 connaddr = {} #socket address(sock:addr)
 em = EventManager() #event manager
 exitt = True #broadcast exit signal
+
+def callback(type, conn):
+    if type == "warnbp":
+        logger.warning(connaddr[conn]+" sent a badpacket")
+
+em.set_callback(callback)
 
 def vagetkey(v, d): #value, dict
     for i in d.keys():
@@ -137,7 +116,6 @@ def p201(conn, data): #client msg
     if conn not in online.keys():
         conn.send("{\"t\":\"303\"}".encode('utf-8'))
     else:
-        time.sleep(0.01) #send too fast
         text = "{\"t\":\"400\", \"m\":\"" + data["m"] + "\", \"u\":\"" + online[conn] + "\"}"
         for c in online.keys():
             c.send(text.encode('utf-8'))
@@ -157,7 +135,11 @@ def p202(conn, data): #client get online
 
     conn.send(text.encode('utf-8'))
 
-em.init_event() #init events
+# init_event
+em.reg_event("0", p0)
+em.reg_event("200", p200)
+em.reg_event("201", p201)
+em.reg_event("202", p202)
 
 def accept_thread():
     while exitt:
@@ -231,8 +213,9 @@ def recv_thread(conn):
             except KeyError:
                 logger.warning(connaddr[conn]+" sent a badpacket")
         # connlist.pop(conn) #it will make danger
-    except Exception:
-        pass
+    except Exception as e:
+        # pass
+        logger.debug(str(type(e))+" "+str(e))
 
 def cli():
     global exitt, ban
@@ -253,12 +236,9 @@ def cli():
         
         try:
             if args[0] == "exit":
-                exitt = 0
                 f = open("./data/ban.json", "w")
                 f.write(json.dumps(ban, indent=4))
-                f.flush()
-                f.close()
-                os._exit(0)
+                exitt = False
 
             if args[0] == "say":
                 text = "{\"t\":\"401\", \"m\":\"" + input_text[4:] + "\"}"

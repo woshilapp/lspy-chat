@@ -1,8 +1,9 @@
-c200: set name n
-c201: send msg m, c
-c202: list online c
-c203: enter chan
-c204: exit chan
+c200: set name (n)
+c201: send msg (m, u, c)
+c202: list online (c)
+c203: list chan 
+c204: enter chan (c)
+c205: exit chan (c)
 
 s300: set suss
 s301: already set
@@ -10,7 +11,11 @@ s302: name illegit
 s303: not set
 s304: kicked
 s305: banned
+s306: not in chan
+s307: already in chan
+s308: permission denied #to chan
 
-s400: client msg m, u
-s401: server msg m
-s410: online list l
+s400: client msg (m, u, c)
+s401: server msg (m)
+s410: online list (c, l)
+s411: chan list (l)
