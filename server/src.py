@@ -28,3 +28,10 @@ class EventManager: #events
     
     def set_callback(self, func):
         self.callback = func
+
+class ChanManager:
+    def __init__(self) -> None:
+        pass
+
+    def __del__(self) -> None:
+        print("destcurt")
