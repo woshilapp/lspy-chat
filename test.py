@@ -43,3 +43,8 @@ for i in range(len(strc)):
         # print(1)
 
 print(dict1)
+print(a.have_chan("a"))
+print(a.have_perm("a", "ban1"), a.have_perm("b", "unban1"))
+a.remove_perm("a", "dsb")
+a.set_chan_perm("b", "w")
+print(a.have_perm("b", "unban1"))
