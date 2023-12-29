@@ -1,5 +1,34 @@
 import threading,json
 
+class BidirectionalDict: #good class from gpt and me
+    def __init__(self):
+        self.dict = {}
+
+    def add_pair(self, key, value):
+        self.dict[key] = value
+        self.dict[value] = key
+
+    def get_value(self, key):
+        return self.dict.get(key)
+
+    def get_key(self, value):
+        return self.dict.get(value)
+
+    def __getitem__(self, key):
+        return self.dict[key]
+
+    def __setitem__(self, key, value):
+        self.add_pair(key, value)
+
+    def values(self):
+        return self.dict.values()
+
+    def keys(self):
+        return self.dict.keys()
+
+    def items(self):
+        return self.dict.items()
+
 class EventManager: #events
     def __init__(self, callback = None): #self
         self.events = {}
@@ -31,8 +60,8 @@ class EventManager: #events
 
 class ChanManager:
     def __init__(self):
-        self.chanf = open("./server/data/chan.json", "r+") #with test
-        # self.chanf = open("./data/chan.json", "r")
+        # self.chanf = open("./server/data/chan.json", "r+") #with test
+        self.chanf = open("./data/chan.json", "r+")
         self.perd = json.loads(self.chanf.read())
         print(self.perd)
 
@@ -131,7 +160,7 @@ class ChanManager:
     # def add_chan
 
     def __del__(self):
-        self.chanf.seek(0)
+        self.chanf.seek(0) #overwrite
         self.chanf.truncate()
         self.chanf.write(json.dumps(self.perd, indent=4))
         self.chanf.close()

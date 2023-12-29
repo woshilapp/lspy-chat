@@ -56,9 +56,10 @@ logger.info("Listen on "+ip+":"+str(port))
 
 slt = 0.000001 #const of sleep
 connlist = {} #connection list(sock:bool) bool is run able
-online = {} #online user(sock:name)
-connaddr = {} #socket address(sock:addr)
+online = BidirectionalDict() #online user(sock:name)
+connaddr = BidirectionalDict() #socket address(sock:addr)
 em = EventManager() #event manager
+cm = ChanManager() #channel manager
 exitt = True #broadcast exit signal
 
 def callback(type, conn):
@@ -67,26 +68,26 @@ def callback(type, conn):
 
 em.set_callback(callback)
 
-def vagetkey(v, d): #value, dict
-    for i in d.keys():
-        if d[i] == v:
-            return i
+# def vagetkey(v, d): #value, dict
+#     for i in d.keys():
+#         if d[i] == v:
+#             return i
     
-    return False
+#     return False           we needn't it because BidirectionalDict
 
 def kick(name):
-    if vagetkey(name, online) == False:
+    if online[name] == False:
         return False
 
-    vagetkey(name, online).send("{\"t\":\"304\"}".encode('utf-8'))
-    vagetkey(name, online).close()
+    online[name].send("{\"t\":\"304\"}".encode('utf-8'))
+    online[name].close()
 
 def kickip(ipaddr):
-    if vagetkey(ipaddr, connaddr) == False:
+    if connaddr[ipaddr] == False:
         return False
 
-    vagetkey(ipaddr, connaddr).send("{\"t\":\"304\"}".encode('utf-8'))
-    vagetkey(ipaddr, connaddr).close()
+    connaddr[ipaddr].send("{\"t\":\"304\"}".encode('utf-8'))
+    connaddr[ipaddr].close()
 
 def p0(conn, data):
     pass
@@ -105,9 +106,10 @@ def p200(conn, data): #client login
 
         online[conn] = data["n"]
         conn.send("{\"t\":\"300\"}".encode('utf-8'))
-        text = "{\"t\":\"401\", \"m\":\"" + data["n"] + " Joined the server\"}"
-        for c in online.keys():
-            c.send(text.encode('utf-8'))
+
+        # text = "{\"t\":\"401\", \"m\":\"" + data["n"] + " Joined the server\"}"
+        # for c in online.keys():
+        #     c.send(text.encode('utf-8'))
         logger.info(connaddr[conn]+" set name: "+data["n"])
     else:
         conn.send("{\"t\":\"302\"}".encode('utf-8'))
@@ -134,6 +136,39 @@ def p202(conn, data): #client get online
     text = "{\"t\":\"410\", \"l\":\"" + onli[1:] + "\"}"
 
     conn.send(text.encode('utf-8'))
+
+def p203(conn, data):
+    if conn not in online.keys():
+        conn.send("{\"t\":\"303\"}".encode('utf-8'))
+        return 0
+    
+    chans = ""
+
+    for chan in cm.chand.keys():
+        chans = chans+","+chan
+
+    text = "{\"t\":\"411\", \"l\":\"" + chans[1:] + "\"}"
+
+    conn.send(text.encode('utf-8'))
+
+def p204(conn, data):
+    if conn not in online.keys():
+        conn.send("{\"t\":\"303\"}".encode('utf-8'))
+        return 0
+
+    if not cm.have_chan(data["c"]):
+        conn.send("{\"t\":\"309\"}".encode('utf-8'))
+        return 0
+
+    if online[conn] in cm.chand[data["c"]]:
+        conn.send("{\"t\":\"308\"}".encode('utf-8'))
+        return 0
+    
+    if not cm.have_perm(data["c"], online[conn]): #permission check
+        conn.send("{\"t\":\"310\"}".encode('utf-8'))
+        return 0
+
+    cm.add_to_chan(data["c"], online[conn])
 
 # init_event
 em.reg_event("0", p0)
@@ -257,8 +292,8 @@ def cli():
                     logger.info(args[1] + " already banned")
                 else:
                     if args[1] in online.values():
-                        vagetkey(args[1], online).send("{\"t\":\"305\"}".encode('utf-8'))
-                        vagetkey(args[1], online).close()
+                        online[args[1]].send("{\"t\":\"305\"}".encode('utf-8'))
+                        online[args[1]].close()
 
                     ban["id"].append(args[1])
 
@@ -277,8 +312,8 @@ def cli():
                 else:
                     for addr in connaddr.values():
                         if args[1] in addr:
-                            vagetkey(addr, connaddr).send("{\"t\":\"305\"}".encode('utf-8'))
-                            vagetkey(addr, connaddr).close()
+                            connaddr[addr].send("{\"t\":\"305\"}".encode('utf-8'))
+                            connaddr[addr].close()
 
                     ban["ip"].append(args[1])
 

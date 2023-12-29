@@ -11,9 +11,11 @@ s302: name illegit
 s303: not set
 s304: kicked
 s305: banned
-s306: not in chan
-s307: already in chan
-s308: permission denied #to chan
+s306: enter suss
+s307: not in chan
+s308: already in chan
+s309: chan not found
+s310: permission denied #to chan
 
 s400: client msg (m, u, c)
 s401: server msg (m)

@@ -20,3 +20,5 @@ It uses the GPLv3 license, So you can:
 ## About
 
 It's a test branch, it's not stable.
+
+I'm sure i will use the new proctrol in 0.4
