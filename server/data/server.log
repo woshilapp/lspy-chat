@@ -1,0 +1,66 @@
+too empty
+[INFO][2023-12-29 23:15:01]Listen on 127.0.0.1:6999
+
+[INFO][2023-12-29 23:15:44]Listen on 127.0.0.1:6999
+[INFO][2023-12-29 23:15:44]Server Started
+[INFO][2023-12-29 23:16:10]Connect to 127.0.0.1:37570
+
+[INFO][2023-12-29 23:18:10]Listen on 127.0.0.1:6999
+[INFO][2023-12-29 23:18:10]Server Started
+[INFO][2023-12-29 23:18:14]Connect to 127.0.0.1:45022
+[INFO][2023-12-29 23:18:15]127.0.0.1:45022 set name: sb
+
+[INFO][2023-12-29 23:22:13]Listen on 127.0.0.1:6999
+[INFO][2023-12-29 23:22:13]Server Started
+[INFO][2023-12-29 23:22:18]Connect to 127.0.0.1:46562
+
+[ERROR][2023-12-29 23:23:01]The port or address already use
+[INFO][2023-12-29 23:23:01]Listen on 127.0.0.1:6999
+[INFO][2023-12-29 23:23:01]Server Started
+
+[ERROR][2023-12-29 23:23:44]The port or address already use
+[INFO][2023-12-29 23:23:44]Listen on 127.0.0.1:6999
+[INFO][2023-12-29 23:23:44]Server Started
+
+[INFO][2023-12-29 23:24:13]Listen on 127.0.0.1:6999
+[INFO][2023-12-29 23:24:13]Server Started
+[INFO][2023-12-29 23:24:21]Connect to 127.0.0.1:50314
+
+[INFO][2023-12-29 23:32:08]Listen on 127.0.0.1:6999
+[INFO][2023-12-29 23:32:08]Server Started
+[INFO][2023-12-29 23:32:11]Connect to 127.0.0.1:48294
+
+[ERROR][2023-12-29 23:33:00]The port or address already use
+[INFO][2023-12-29 23:33:00]Listen on 127.0.0.1:6999
+[INFO][2023-12-29 23:33:00]Server Started
+
+[INFO][2023-12-29 23:45:44]Listen on 127.0.0.1:6999
+[INFO][2023-12-29 23:45:44]Server Started
+[INFO][2023-12-29 23:45:50]Connect to 127.0.0.1:54200
+
+[INFO][2023-12-30 22:39:24]Listen on 127.0.0.1:6999
+[INFO][2023-12-30 22:39:24]Server Started
+[INFO][2023-12-30 22:40:27]Connect to 127.0.0.1:37852
+[INFO][2023-12-30 22:40:37]127.0.0.1:37852 set name: sb
+[INFO][2023-12-30 22:42:35]Disconnect from 127.0.0.1:37852
+
+[INFO][2023-12-30 22:43:16]Listen on 127.0.0.1:6999
+[INFO][2023-12-30 22:43:16]Server Started
+[INFO][2023-12-30 22:43:20]Connect to 127.0.0.1:54688
+[INFO][2023-12-30 22:43:27]127.0.0.1:54688 set name: dsb
+[INFO][2023-12-30 22:44:20]dsb enter to chan: a
+[INFO][2023-12-30 22:44:31]Disconnect from 127.0.0.1:54688
+
+[INFO][2023-12-30 22:45:44]Listen on 127.0.0.1:6999
+[INFO][2023-12-30 22:45:44]Server Started
+[INFO][2023-12-30 22:45:48]Connect to 127.0.0.1:54952
+[INFO][2023-12-30 22:45:58]127.0.0.1:54952 set name: a
+[INFO][2023-12-30 22:46:06]a enter to chan: a
+[INFO][2023-12-30 22:46:27]Recv from a: dsb to chan: a
+[INFO][2023-12-30 22:46:29]Recv from a: dsb to chan: a
+[INFO][2023-12-30 22:46:30]Recv from a: dsb to chan: a
+[INFO][2023-12-30 22:46:30]Recv from a: dsb to chan: a
+[INFO][2023-12-30 22:46:41]a exit from chan: a
+[INFO][2023-12-30 22:47:49]a enter to chan: a
+[INFO][2023-12-30 22:48:01]a exit from chan: a
+[INFO][2023-12-30 22:51:52]Disconnect from 127.0.0.1:54952
