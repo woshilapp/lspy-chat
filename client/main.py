@@ -13,7 +13,7 @@ sock.setblocking(True)
 
 class MyCompleter(Completer):
     def get_completions(self, document, complete_event):
-        words = ['/help','/say','/list','/setname','/exit','/connect','/disconnect'] #添加以/开头的命令
+        words = ['/help','/say','/list','/listchan','/enter','/esc','/setname','/exit','/connect','/disconnect'] #添加以/开头的命令
         word_before_cursor = document.get_word_before_cursor(WORD=True)
         for word in words:
             if word.startswith(word_before_cursor):
