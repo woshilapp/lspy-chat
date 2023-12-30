@@ -161,7 +161,7 @@ def p204(conn, data):
         return 0
 
     if online[conn] in cm.chand[data["c"]]:
-        conn.send("{\"t\":\"308\"}".encode('utf-8'))
+        conn.send("{\"t\":\"307\"}".encode('utf-8'))
         return 0
     
     if not cm.have_perm(data["c"], online[conn]): #permission check
@@ -170,11 +170,29 @@ def p204(conn, data):
 
     cm.add_to_chan(data["c"], online[conn])
 
+def p205(conn, data):
+    if conn not in online.keys():
+        conn.send("{\"t\":\"303\"}".encode('utf-8'))
+        return 0
+
+    if not cm.have_chan(data["c"]):
+        conn.send("{\"t\":\"309\"}".encode('utf-8'))
+        return 0
+
+    if online[conn] not in cm.chand[data["c"]]:
+        conn.send("{\"t\":\"308\"}".encode('utf-8'))
+        return 0
+
+    cm.remove_from_chan(data["cs"], online[conn])
+
 # init_event
 em.reg_event("0", p0)
 em.reg_event("200", p200)
 em.reg_event("201", p201)
 em.reg_event("202", p202)
+em.reg_event("203", p203)
+em.reg_event("204", p204)
+em.reg_event("205", p205)
 
 def accept_thread():
     while exitt:
