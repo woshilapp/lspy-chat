@@ -394,4 +394,4 @@ def cli():
 threading.Thread(target=accept_thread, name="accp_th").start()
 threading.Thread(target=clear_thread, name="clar_th").start()
 logger.info("Server Started")
-cli()
+cli() #will it longer? (shitcode)
