@@ -20,6 +20,13 @@ class BidirectionalDict: #good class from gpt and me
     def __setitem__(self, key, value):
         self.add_pair(key, value)
 
+    def del_pair(self, any):
+        key = any
+        value = self.dict[key]
+
+        self.dict.pop(key)
+        self.dict.pop(value)
+
     def values(self):
         return self.dict.values()
 
@@ -63,7 +70,7 @@ class ChanManager:
         # self.chanf = open("./server/data/chan.json", "r+") #with test
         self.chanf = open("./data/chan.json", "r+")
         self.perd = json.loads(self.chanf.read())
-        print(self.perd)
+        # print(self.perd) debug
 
         self.chand = {}
 

@@ -107,9 +107,6 @@ def p200(conn, data): #client login
         online[conn] = data["n"]
         conn.send("{\"t\":\"300\"}".encode('utf-8'))
 
-        # text = "{\"t\":\"401\", \"m\":\"" + data["n"] + " Joined the server\"}"
-        # for c in online.keys():
-        #     c.send(text.encode('utf-8'))
         logger.info(connaddr[conn]+" set name: "+data["n"])
     else:
         conn.send("{\"t\":\"302\"}".encode('utf-8'))
@@ -117,20 +114,28 @@ def p200(conn, data): #client login
 def p201(conn, data): #client msg
     if conn not in online.keys():
         conn.send("{\"t\":\"303\"}".encode('utf-8'))
+
+    if not cm.in_chan(data["c"], online[conn]):
+        conn.send("{\"t\":\"307\"}".encode('utf-8'))
+
     else:
-        text = "{\"t\":\"400\", \"m\":\"" + data["m"] + "\", \"u\":\"" + online[conn] + "\"}"
-        for c in online.keys():
-            c.send(text.encode('utf-8'))
-        logger.info("Recv from "+online[conn]+": "+data["m"])
+        text = "{\"t\":\"400\", \"m\":\"" + data["m"] + "\", \"u\":\"" + online[conn] + "\", \"c\": \"" + data["c"] + "\"}"
+        for u in cm.chand[data["c"]]:
+            online[u].send(text.encode('utf-8'))
+        logger.info("Recv from "+online[conn]+": "+data["m"]+" to chan: "+data["c"])
 
 def p202(conn, data): #client get online
     if conn not in online.keys():
         conn.send("{\"t\":\"303\"}".encode('utf-8'))
         return 0
     
+    if not cm.in_chan(data["c"], online[conn]):
+        conn.send("{\"t\":\"307\"}".encode('utf-8'))
+        return 0
+    
     onli = ""
 
-    for i in online.values():
+    for i in cm.chand[data["c"]]:
         onli = onli+","+i
 
     text = "{\"t\":\"410\", \"l\":\"" + onli[1:] + "\"}"
@@ -161,7 +166,7 @@ def p204(conn, data):
         return 0
 
     if online[conn] in cm.chand[data["c"]]:
-        conn.send("{\"t\":\"307\"}".encode('utf-8'))
+        conn.send("{\"t\":\"308\"}".encode('utf-8'))
         return 0
     
     if not cm.have_perm(data["c"], online[conn]): #permission check
@@ -169,6 +174,13 @@ def p204(conn, data):
         return 0
 
     cm.add_to_chan(data["c"], online[conn])
+
+    text = "{\"t\":\"401\", \"m\":\"" + online[conn] + " Joined the channel\"}"
+
+    for u in cm.chand[data["c"]]:
+        online[u].send(text.encode('utf-8'))
+
+    logger.info(online[conn]+" enter to chan: "+data["c"])
 
 def p205(conn, data):
     if conn not in online.keys():
@@ -180,10 +192,17 @@ def p205(conn, data):
         return 0
 
     if online[conn] not in cm.chand[data["c"]]:
-        conn.send("{\"t\":\"308\"}".encode('utf-8'))
+        conn.send("{\"t\":\"307\"}".encode('utf-8'))
         return 0
 
-    cm.remove_from_chan(data["cs"], online[conn])
+    cm.remove_from_chan(data["c"], online[conn])
+
+    text = "{\"t\":\"401\", \"m\":\"" + online[conn] + " Exited the channel\"}"
+
+    for u in cm.chand[data["c"]]:
+        online[u].send(text.encode('utf-8'))
+
+    logger.info(online[conn]+" exit from chan: "+data["c"])
 
 # init_event
 em.reg_event("0", p0)
@@ -230,12 +249,18 @@ def clear_thread():
                 logger.info("Disconnect from "+connaddr[conn])
                 connlist[conn] = False
                 needrm.append(conn)
-                connaddr.pop(conn)
+                connaddr.del_pair(conn)
                 if conn in online.keys():
-                    text = "{\"t\":\"401\", \"m\":\"" + online[conn] + " Exited the server\"}"
-                    online.pop(conn)
-                    for c in online.keys():
-                        c.send(text.encode('utf-8'))
+                    for chan in cm.chand.keys():
+                        if online[conn] in cm.chand[chan]:
+                            cm.remove_from_chan(online[conn])
+
+                            text = "{\"t\":\"401\", \"m\":\"" + online[conn] + " Exited the channel\"}"
+
+                            for u in cm.chand[chan]: #broadcast
+                                online[u].send(text.encode('utf-8'))
+                    
+                    online.del_pair(conn)
                     
             except Exception as e:
                 logger.error("Uncaught error: "+str(e))
@@ -345,7 +370,20 @@ def cli():
                     logger.info(args[1] + " unbanned from server")
 
             elif args[0] == "list":
-                printf(str(list(online.values())))
+                printf(str(cm.chand[args[1]]))
+
+            elif args[0] == "listchan":
+                printf(str(list(cm.chand.keys())))
+
+            elif args[0] == "chanper": #chanper %chan% [b/w]
+                cm.set_chan_perm(args[1], args[2])
+
+            elif args[0] == "userper": #userper %user% [add/del] %chan%
+                if args[2] == "add":
+                    cm.add_perm(args[3], args[1])
+                
+                if args[2] == "del":
+                    cm.remove_perm(args[3], args[1])
 
             # elif args[0] == "eval":
             #     eval(args[1])
