@@ -85,7 +85,7 @@ class mainclient(object):
                     printf("[Server]" + data["m"])
 
                 elif data["t"] == "410":
-                    text = "online:" + data["l"]
+                    text = "["+data["c"]+"]"+"online:" + data["l"]
                     printf(text)
 
                 elif data["t"] == "411":

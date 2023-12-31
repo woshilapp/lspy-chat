@@ -1,6 +1,6 @@
 #lspy-chat server test by Python 3.12.1
 #
-import socket,json,threading,logging,os,time,yaml,re
+import socket,json,threading,logging,time,yaml,re
 from prompt_toolkit import prompt,print_formatted_text as printf
 from prompt_toolkit.history import InMemoryHistory
 from src import *
@@ -175,7 +175,7 @@ def p204(conn, data):
 
     cm.add_to_chan(data["c"], online[conn])
 
-    text = "{\"t\":\"401\", \"m\":\"" + online[conn] + " Joined the channel\"}"
+    text = "{\"t\":\"401\", \"m\":\"" + online[conn] + " Joined the channel\", \"c\": \"" + data["c"] + "\"}"
 
     for u in cm.chand[data["c"]]:
         online[u].send(text.encode('utf-8'))
@@ -197,7 +197,7 @@ def p205(conn, data):
 
     cm.remove_from_chan(data["c"], online[conn])
 
-    text = "{\"t\":\"401\", \"m\":\"" + online[conn] + " Exited the channel\"}"
+    text = "{\"t\":\"401\", \"m\":\"" + online[conn] + " Exited the channel\", \"c\": \"" + data["c"] + "\"}"
 
     for u in cm.chand[data["c"]]:
         online[u].send(text.encode('utf-8'))
@@ -253,9 +253,9 @@ def clear_thread():
                 if conn in online.keys():
                     for chan in cm.chand.keys():
                         if online[conn] in cm.chand[chan]:
-                            cm.remove_from_chan(online[conn])
+                            cm.remove_from_chan(chan, online[conn])
 
-                            text = "{\"t\":\"401\", \"m\":\"" + online[conn] + " Exited the channel\"}"
+                            text = "{\"t\":\"401\", \"m\":\"" + online[conn] + " Exited the channel\", \"c\": \"" + chan + "\"}"
 
                             for u in cm.chand[chan]: #broadcast
                                 online[u].send(text.encode('utf-8'))
@@ -319,7 +319,7 @@ def cli():
                 exitt = False
 
             if args[0] == "say":
-                text = "{\"t\":\"401\", \"m\":\"" + input_text[4:] + "\"}"
+                text = "{\"t\":\"401\", \"m\":\"" + input_text[4:] + "\", \"c\": \"*\"}"
                 for conn in online.keys():
                     conn.send(text.encode('utf-8'))
                 logger.info("Recv from [Server]: " + input_text[4:])

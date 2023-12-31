@@ -18,6 +18,6 @@ s309: chan not found
 s310: permission denied #to chan
 
 s400: client msg (m, u, c)
-s401: server msg (m)
+s401: server msg (m, c)
 s410: online list (c, l)
 s411: chan list (l)
