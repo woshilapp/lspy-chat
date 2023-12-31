@@ -1,3 +1,4 @@
+
 #lspy-chat client by Python 3.10.12
 #made on 2023/12/02
 import socket,time,os,json,queue
@@ -85,6 +86,10 @@ class mainclient(object):
 
                 elif data["t"] == "410":
                     text = "online:" + data["l"]
+                    printf(text)
+
+                elif data["t"] == "411":
+                    text = "channels:" + data["l"]
                     printf(text)
 
             except json.decoder.JSONDecodeError:
