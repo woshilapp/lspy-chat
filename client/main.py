@@ -7,13 +7,14 @@ from prompt_toolkit.history import InMemoryHistory
 from prompt_toolkit.shortcuts import CompleteStyle
 from threading import Thread
 
+prompt1 = "#" #chan prompt
 dataqueue = queue.Queue() #procth too slow
 sock = socket.socket(family=socket.AF_INET, type=socket.SOCK_STREAM)
 sock.setblocking(True)
 
 class MyCompleter(Completer):
     def get_completions(self, document, complete_event):
-        words = ['/help','/say','/list','/listchan','/enter','/esc','/setname','/exit','/connect','/disconnect'] #添加以/开头的命令
+        words = ['/help','/say','/list','/listchan','/enter','/esc','/setname','/exit','/connect','/disconnect','/default'] #添加以/开头的命令
         word_before_cursor = document.get_word_before_cursor(WORD=True)
         for word in words:
             if word.startswith(word_before_cursor):
