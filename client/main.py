@@ -8,6 +8,7 @@ from prompt_toolkit.history import InMemoryHistory
 from prompt_toolkit.shortcuts import CompleteStyle
 from threading import Thread
 
+default_chan = "" #default channel
 prompt1 = "#" #chan prompt
 dataqueue = queue.Queue() #procth too slow
 sock = socket.socket(family=socket.AF_INET, type=socket.SOCK_STREAM)
@@ -78,11 +79,26 @@ class mainclient(object):
                 elif data["t"] == "305":
                     printf("Banned from server")
 
+                # elif data["t"] == "306": useless
+                #     printf("")
+
+                elif data["t"] == "307":
+                    printf("You are not on the channel")
+
+                elif data["t"] == "308":
+                    printf("You already in this channel")
+
+                elif data["t"] == "309":
+                    printf("Channel not found")
+
+                elif data["t"] == "310":
+                    printf("Permission denied, You can't access this channel")
+
                 elif data["t"] == "400":
-                    printf("<" + data["u"] + ">" + data["m"])
+                    printf("["+data["c"]+"]" + "<" + data["u"] + ">" + data["m"])
 
                 elif data["t"] == "401":
-                    printf("[Server]" + data["m"])
+                    printf("["+data["c"]+"]" + "[Server]" + data["m"])
 
                 elif data["t"] == "410":
                     text = "["+data["c"]+"]"+"online:" + data["l"]
