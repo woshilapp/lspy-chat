@@ -175,6 +175,8 @@ def p204(conn, data):
 
     cm.add_to_chan(data["c"], online[conn])
 
+    conn.send("{\"t\":\"306\"}".encode('utf-8'))
+
     text = "{\"t\":\"401\", \"m\":\"" + online[conn] + " Joined the channel\", \"c\": \"" + data["c"] + "\"}"
 
     for u in cm.chand[data["c"]]:

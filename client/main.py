@@ -1,6 +1,5 @@
-
-#lspy-chat client by Python 3.10.12
-#made on 2023/12/02
+#lspy-chat client test by Python 3.12.1
+#
 import socket,time,os,json,queue
 from prompt_toolkit import prompt,print_formatted_text as printf
 from prompt_toolkit.completion import Completer,Completion
@@ -79,8 +78,8 @@ class mainclient(object):
                 elif data["t"] == "305":
                     printf("Banned from server")
 
-                # elif data["t"] == "306": useless
-                #     printf("")
+                elif data["t"] == "306":
+                    printf("")
 
                 elif data["t"] == "307":
                     printf("You are not on the channel")
