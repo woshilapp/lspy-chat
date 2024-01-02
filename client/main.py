@@ -7,6 +7,7 @@ from prompt_toolkit.history import InMemoryHistory
 from prompt_toolkit.shortcuts import CompleteStyle
 from threading import Thread
 
+# temp_g = ""
 default_chan = "" #default channel
 prompt1 = "#" #chan prompt
 dataqueue = queue.Queue() #procth too slow
@@ -52,6 +53,7 @@ class mainclient(object):
                 break
 
     def procthread(self):
+        global temp_g
         while True:
             msg = dataqueue.get()
             try:
@@ -79,7 +81,7 @@ class mainclient(object):
                     printf("Banned from server")
 
                 elif data["t"] == "306":
-                    printf("")
+                    temp_g = "true"
 
                 elif data["t"] == "307":
                     printf("You are not on the channel")
@@ -121,7 +123,7 @@ class mainclient(object):
                 continue
 
     def cli(self):
-        global sock
+        global sock, default_chan
         commands = MyCompleter()
         history = InMemoryHistory()
         helpitem = "{0:<25}\t{1:<25}\t{2:<25}"
@@ -204,6 +206,18 @@ class mainclient(object):
                             sock.close()
                         else:
                             printf("disconnect:Not connected to server")
+
+                    elif args[0] == '/enter':
+                        if connserver():
+                            text = "{\"t\":\"204\", \"c\":\"" + args[1] + "\"}"
+                            self.sendata(text)
+                            time.sleep(0.5)
+                            if temp_g != "true":
+                                pass
+                            else:
+                                default_chan = args[1]
+                        else:
+                            printf("enter:Not connected to server")
 
                     elif args[0] == '/exit':
                         printf("bye")
