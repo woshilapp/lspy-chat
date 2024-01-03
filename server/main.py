@@ -1,5 +1,6 @@
 #lspy-chat server test by Python 3.12.1
-#
+#finish 0.3 2024/01/03
+#0.4 use the new proctrol
 import socket,json,threading,logging,time,yaml,re
 from prompt_toolkit import prompt,print_formatted_text as printf
 from prompt_toolkit.history import InMemoryHistory
@@ -138,7 +139,7 @@ def p202(conn, data): #client get online
     for i in cm.chand[data["c"]]:
         onli = onli+","+i
 
-    text = "{\"t\":\"410\", \"l\":\"" + onli[1:] + "\"}"
+    text = "{\"t\":\"410\", \"l\":\"" + onli[1:] + "\", \"c\": \"" + data["c"] + "\"}"
 
     conn.send(text.encode('utf-8'))
 
@@ -318,13 +319,23 @@ def cli():
             if args[0] == "exit":
                 f = open("./data/ban.json", "w")
                 f.write(json.dumps(ban, indent=4))
+                cm.__del__()
                 exitt = False
 
-            if args[0] == "say":
-                text = "{\"t\":\"401\", \"m\":\"" + input_text[4:] + "\", \"c\": \"*\"}"
+            if args[0] == "saya":
+                text = "{\"t\":\"401\", \"m\":\"" + input_text[5:] + "\", \"c\": \"*\"}"
                 for conn in online.keys():
-                    conn.send(text.encode('utf-8'))
-                logger.info("Recv from [Server]: " + input_text[4:])
+                    if type(conn) == str:
+                        continue
+                    else:
+                        conn.send(text.encode('utf-8'))
+                logger.info("Recv from [Server]: " + input_text[5:] + " to chan: *")
+
+            elif args[0] == "say":
+                text = "{\"t\":\"401\", \"m\":\"" + input_text[5+len(args[1]):] + "\", \"c\": \"" + args[1] + "\"}"
+                for u in cm.chand[args[1]]:
+                    online[u].send(text.encode('utf-8'))
+                logger.info("Recv from [Server]: " + input_text[5+len(args[1]):] + " to chan: " + args[1])
 
             elif args[0] == "kick":
                 kick(args[1])

@@ -7,9 +7,7 @@ from prompt_toolkit.history import InMemoryHistory
 from prompt_toolkit.shortcuts import CompleteStyle
 from threading import Thread
 
-# temp_g = ""
 default_chan = "" #default channel
-prompt1 = "#" #chan prompt
 dataqueue = queue.Queue() #procth too slow
 sock = socket.socket(family=socket.AF_INET, type=socket.SOCK_STREAM)
 sock.setblocking(True)
@@ -53,7 +51,6 @@ class mainclient(object):
                 break
 
     def procthread(self):
-        global temp_g
         while True:
             msg = dataqueue.get()
             try:
@@ -81,7 +78,7 @@ class mainclient(object):
                     printf("Banned from server")
 
                 elif data["t"] == "306":
-                    temp_g = "true"
+                    pass
 
                 elif data["t"] == "307":
                     printf("You are not on the channel")
@@ -129,7 +126,7 @@ class mainclient(object):
         helpitem = "{0:<25}\t{1:<25}\t{2:<25}"
         printf("Welcome to Lspy-Chat Beta")
         printf("Type \'/help\' to get help")
-        printf("Made on 2023/12/02 by Win11inVMware")
+        printf("Made on 2024/01/03 by Win11inVMware")
         while True:
             try:
                 get = prompt('>',completer=commands,history=history,complete_style=CompleteStyle.READLINE_LIKE,auto_suggest=False)
@@ -158,16 +155,20 @@ class mainclient(object):
                     if args[0] == '/help':
                         printf(helpitem.format("command:","usage:","comment:"))
                         printf(helpitem.format("help","/help","Print command help"))
-                        printf(helpitem.format("say","/say <text>","Send message to server"))
+                        printf(helpitem.format("say","/say <chan> <text>","Send message to channel"))
                         printf(helpitem.format("setname","/setname <username>","Set your name"))
-                        printf(helpitem.format("list","/list","Print online user"))
+                        printf(helpitem.format("list","/list <chan>","Print online user in the channel"))
+                        printf(helpitem.format("listchan","/listchan","Print channels"))
+                        printf(helpitem.format("enter","/enter <chan>","Enter in a channel"))
+                        printf(helpitem.format("esc","/esc <chan>","Escape the channel"))
+                        printf(helpitem.format("default","/default","Set the default channel (not to use /say)"))
                         printf(helpitem.format("connect","/connect <ip>:<port>","Connect to server"))
                         printf(helpitem.format("disconnect","/disconnect","Disconnect from server"))
                         printf(helpitem.format("exit","/exit","Exit from this program"))
 
                     elif args[0] == '/say':
                         if connserver():
-                            self.sendmsg(get[5:])
+                            self.sendmsg(get[6+len(args[1]):], args[1])
                         else:
                             printf("say:Not connected to server")
                     
@@ -180,10 +181,17 @@ class mainclient(object):
                                 
                     elif args[0] == '/list':
                         if connserver():
-                            text = "{\"t\":\"202\"}"
+                            text = "{\"t\":\"202\", \"c\": \"" + args[1] + "\"}"
                             self.sendata(text)
                         else:
                             printf("list:Not connected to server")
+
+                    elif args[0] == '/listchan':
+                        if connserver():
+                            text = "{\"t\":\"203\"}"
+                            self.sendata(text)
+                        else:
+                            printf("listchan:Not connected to server")
 
                     elif args[0] == '/connect':
                         if connserver():
@@ -211,13 +219,18 @@ class mainclient(object):
                         if connserver():
                             text = "{\"t\":\"204\", \"c\":\"" + args[1] + "\"}"
                             self.sendata(text)
-                            time.sleep(0.5)
-                            if temp_g != "true":
-                                pass
-                            else:
-                                default_chan = args[1]
                         else:
                             printf("enter:Not connected to server")
+
+                    elif args[0] == '/esc':
+                        if connserver():
+                            text = "{\"t\":\"205\", \"c\":\"" + args[1] + "\"}"
+                            self.sendata(text)
+                        else:
+                            printf("esc:Not connected to server")
+
+                    elif args[0] == '/default':
+                        default_chan = args[1]
 
                     elif args[0] == '/exit':
                         printf("bye")
@@ -231,15 +244,15 @@ class mainclient(object):
 
             else:
                 if connserver():
-                    self.sendmsg(get)
+                    self.sendmsg(get, default_chan)
                 else:
                     printf("say:Not connected to server")
 
     def sendata(self,msg):
         sock.send(str(msg).encode('utf-8'))
     
-    def sendmsg(self,msg):
-        text = "{\"t\":\"201\", \"m\":\"" + msg + "\"}"
+    def sendmsg(self,msg,chan):
+        text = "{\"t\":\"201\", \"m\":\"" + msg + "\", \"c\": \"" + chan + "\"}"
         self.sendata(text)
 
 def connserver():
