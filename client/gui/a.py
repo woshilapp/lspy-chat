@@ -24,7 +24,7 @@ def on_select(event):
 root = tk.Tk()
 root.title("Listbox with Text Example")
 
-menubar = tk.Menu(root).pack()        # 建立最上层菜单
+menubar = tk.Menu(root)        # 建立最上层菜单
 # 建立菜单类别对象，并将此菜单类别命名为File
 filemenu = tk.Menu(menubar,tearoff=False)
 menubar.add_cascade(label="File",menu=filemenu)

@@ -5,9 +5,14 @@ from queue import Queue
 import socket, json, re, os
 
 root = tk.Tk()
-root.geometry("760x580")
+root.geometry("900x580")
 root.title("Tepy-Chat GUI Client")
 root.configure(bg="white")
+
+#Toolbar
+toolbar = tk.Menu(root)
+
+
 
 #Frames----------------------------------------------------------------------------
 
@@ -63,6 +68,9 @@ ip_label.pack(side="right", padx=3)
 #Top-Frames----------------------------------------------------------------------------
 
 #Middle-Frames----------------------------------------------------------------------------
+
+chan_listbox = tk.Listbox(middle_frame, width=20)
+chan_listbox.pack(fill="y", side="left", padx=3, pady=3)
 
 onli_textbox = tk.Text(middle_frame, width=18, state="disabled")
 onli_textbox.pack(fill="y", side="right", padx=3, pady=3)
