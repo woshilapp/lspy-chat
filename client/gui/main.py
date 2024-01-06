@@ -12,7 +12,7 @@ root.configure(bg="white")
 #Toolbar
 toolbar = tk.Menu(root)
 
-
+root.config(menu=toolbar)
 
 #Frames----------------------------------------------------------------------------
 
@@ -265,6 +265,9 @@ def setname():
         sendata(text)
     else:
         show_info("未连接到服务器")
+
+toolbar.add_command(label="Channels", command=on_closing)
+toolbar.add_command(label="Exit", command=on_closing)
 
 onli_textbox.config(state="normal") #init online
 onli_textbox.insert(tk.END, "在线列表:")
