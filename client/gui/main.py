@@ -14,6 +14,17 @@ toolbar = tk.Menu(root)
 
 root.config(menu=toolbar)
 
+#Channels window------------------------------------------------------------------
+
+chan_window = tk.Toplevel(root)
+chan_window.geometry("330x145")
+chan_window.title("Channels")
+chan_window.resizable(0, 0)
+
+chan_label1 = tk.Label(chan_window, width=10, text="nmsl").pack(padx=3, pady=35, anchor="center")
+
+#Channels window------------------------------------------------------------------
+
 #Frames----------------------------------------------------------------------------
 
 # 上部分Frame
