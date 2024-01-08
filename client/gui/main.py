@@ -1,4 +1,5 @@
 import tkinter as tk
+import tkinter.ttk as ttk
 import tkinter.messagebox as tkmsgbox
 from threading import Thread
 from queue import Queue
@@ -17,11 +18,21 @@ root.config(menu=toolbar)
 #Channels window------------------------------------------------------------------
 
 chan_window = tk.Toplevel(root)
-chan_window.geometry("330x145")
+chan_window.geometry("330x144")
 chan_window.title("Channels")
 chan_window.resizable(0, 0)
+chan_window.protocol("WM_DELETE_WINDOW", chan_window.withdraw) #don't del it
+chan_window.withdraw()
 
-chan_label1 = tk.Label(chan_window, width=10, text="nmsl").pack(padx=3, pady=35, anchor="center")
+chan_label1 = tk.Label(chan_window, width=10, text="Channels:")
+chan_label1.place(y=40, x=50)
+chan_selbox1 = ttk.Combobox(chan_window, width=11, state='readonly')
+# chan_selbox1.current(0)
+chan_selbox1.place(y=40, x=155)
+chan_butt_join = tk.Button(chan_window, width=5, text="Join")
+chan_butt_join.place(y=80, x=70)
+chan_butt_exit = tk.Button(chan_window, width=5, text="Exit")
+chan_butt_exit.place(y=80, x=170)
 
 #Channels window------------------------------------------------------------------
 
@@ -277,7 +288,7 @@ def setname():
     else:
         show_info("未连接到服务器")
 
-toolbar.add_command(label="Channels", command=on_closing)
+toolbar.add_command(label="Channels", command=chan_window.deiconify)
 toolbar.add_command(label="Exit", command=on_closing)
 
 onli_textbox.config(state="normal") #init online
