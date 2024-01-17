@@ -158,6 +158,7 @@ def recvthread():
             data = sock.recv(1024).decode("utf-8")
             if data == '':
                 printf("Disconnect from server")
+                change_onli("")
                 recvth = Thread(target=recvthread,daemon=True)
                 sock = socket.socket(family=socket.AF_INET,type=socket.SOCK_STREAM)
                 sock.setblocking(True)
@@ -166,6 +167,7 @@ def recvthread():
                 dataqueue.put_nowait(data)
         except socket.error:
             printf("Disconnect from server")
+            change_onli("")
             recvth = Thread(target=recvthread,daemon=True)
             sock = socket.socket(family=socket.AF_INET,type=socket.SOCK_STREAM)
             sock.setblocking(True)
@@ -213,10 +215,7 @@ def procthread():
 
                 text = "在线列表:\n" + to
 
-                onli_textbox.config(state="normal")
-                onli_textbox.delete(1.0, tk.END)
-                onli_textbox.insert(tk.END, text)
-                onli_textbox.config(state="disabled")
+                change_onli(text)
 
         except json.decoder.JSONDecodeError:
             printf("json Recv Badpackets: "+msg)
@@ -247,6 +246,12 @@ def send_butt():
         else:
             show_info("未连接到服务器")
 
+def change_onli(str):
+    onli_textbox.config(state="normal")
+    onli_textbox.delete(1.0, tk.END)
+    onli_textbox.insert(tk.END, "在线列表:\n"+str)
+    onli_textbox.config(state="disabled")
+
 def connect():
     if ip_input.get() == "":
         show_info("IP地址不能为空")
@@ -269,10 +274,6 @@ def connect():
 
 def disconnect():
     if connserver():
-        onli_textbox.config(state="normal")
-        onli_textbox.delete(1.0, tk.END)
-        onli_textbox.insert(tk.END, "在线列表:")
-        onli_textbox.config(state="disabled")
         sock.close()
     else:
         show_info("未连接到服务器")
