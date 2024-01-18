@@ -118,6 +118,7 @@ send_button.pack(side="right", padx=5)
 #Bottom-Frames----------------------------------------------------------------------------
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+channels = {} #str: arr, "chan_name": ["msg", "onli"]
 dataqueue = Queue()
 
 def on_closing():
