@@ -138,6 +138,19 @@ def printf(text):
     msg_textbox.yview(tk.END)
     msg_textbox.config(state="disabled")
 
+def change_textbox(str):
+    msg_textbox.config(state="normal")
+    onli_textbox.delete(1.0, tk.END)
+    msg_textbox.insert(tk.END, str)
+    msg_textbox.yview(tk.END)
+    msg_textbox.config(state="disabled")
+
+def change_onli(str):
+    onli_textbox.config(state="normal")
+    onli_textbox.delete(1.0, tk.END)
+    onli_textbox.insert(tk.END, "在线列表:\n"+str)
+    onli_textbox.config(state="disabled")
+
 def sendata(msg):
     sock.send(str(msg).encode('utf-8'))
     
@@ -262,12 +275,6 @@ def send_butt():
             say_input.delete(0, tk.END)
         else:
             show_info("未连接到服务器")
-
-def change_onli(str):
-    onli_textbox.config(state="normal")
-    onli_textbox.delete(1.0, tk.END)
-    onli_textbox.insert(tk.END, "在线列表:\n"+str)
-    onli_textbox.config(state="disabled")
 
 def connect():
     if ip_input.get() == "":
