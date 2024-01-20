@@ -201,8 +201,24 @@ def procthread():
             elif data["t"] == "305":
                 printf("Banned from server")
 
+            elif data["t"] == "306":
+                pass
+
+            elif data["t"] == "307":
+                pass
+
+            elif data["t"] == "308":
+                pass
+
+            elif data["t"] == "309":
+                pass
+
+            elif data["t"] == "310":
+                show_warn("你没有权限进入这个频道")
+
             elif data["t"] == "400":
-                printf("<" + data["u"] + ">" + data["m"])
+                # printf("<" + data["u"] + ">" + data["m"])
+                channels[data["c"]][0] += "\n" + "<" + data["u"] + ">" + data["m"]
 
             elif data["t"] == "401":
                 printf("[Server]" + data["m"])
