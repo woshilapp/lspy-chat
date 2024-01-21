@@ -57,3 +57,49 @@
 [INFO][2024-01-03 22:57:34]unban1 exit from chan: b
 [INFO][2024-01-03 22:58:11]Disconnect from 127.0.0.1:39642
 [INFO][2024-01-03 22:58:16]Disconnect from 127.0.0.1:48296
+
+[INFO][2024-01-21 23:42:23]Listen on 127.0.0.1:6999
+[INFO][2024-01-21 23:42:23]Server Started
+[INFO][2024-01-21 23:42:39]Connect to 127.0.0.1:45018
+[INFO][2024-01-21 23:42:43]127.0.0.1:45018 set name: sb
+[INFO][2024-01-21 23:43:01]Disconnect from 127.0.0.1:45018
+[INFO][2024-01-21 23:47:01]Connect to 127.0.0.1:34708
+[INFO][2024-01-21 23:47:02]127.0.0.1:34708 set name: a
+[INFO][2024-01-21 23:47:23]Disconnect from 127.0.0.1:34708
+[INFO][2024-01-21 23:48:21]Connect to 127.0.0.1:53312
+[INFO][2024-01-21 23:48:22]127.0.0.1:53312 set name: a
+[INFO][2024-01-21 23:49:16]Disconnect from 127.0.0.1:53312
+[INFO][2024-01-21 23:49:26]Connect to 127.0.0.1:56996
+[INFO][2024-01-21 23:49:27]127.0.0.1:56996 set name: aa
+[INFO][2024-01-21 23:49:39]Disconnect from 127.0.0.1:56996
+[INFO][2024-01-21 23:50:15]Connect to 127.0.0.1:58668
+[INFO][2024-01-21 23:50:16]127.0.0.1:58668 set name: s
+[INFO][2024-01-21 23:50:36]Disconnect from 127.0.0.1:58668
+[INFO][2024-01-21 23:51:34]Connect to 127.0.0.1:50652
+[INFO][2024-01-21 23:51:35]127.0.0.1:50652 set name: a
+[INFO][2024-01-21 23:51:49]Disconnect from 127.0.0.1:50652
+[INFO][2024-01-21 23:53:11]Connect to 127.0.0.1:37478
+[INFO][2024-01-21 23:53:12]127.0.0.1:37478 set name: aa
+[INFO][2024-01-21 23:53:15]aa enter to chan: a
+[INFO][2024-01-22 00:01:19]Disconnect from 127.0.0.1:37478
+
+[INFO][2024-01-22 00:02:21]Listen on 127.0.0.1:6999
+[INFO][2024-01-22 00:02:21]Server Started
+[INFO][2024-01-22 00:02:34]Connect to 127.0.0.1:60420
+[INFO][2024-01-22 00:02:36]127.0.0.1:60420 set name: a
+[INFO][2024-01-22 00:02:39]a enter to chan: a
+[INFO][2024-01-22 00:03:23]Disconnect from 127.0.0.1:60420
+
+[INFO][2024-01-22 00:03:47]Listen on 127.0.0.1:6999
+[INFO][2024-01-22 00:03:47]Server Started
+[INFO][2024-01-22 00:03:57]Connect to 127.0.0.1:60590
+[INFO][2024-01-22 00:03:59]127.0.0.1:60590 set name: a
+[INFO][2024-01-22 00:04:01]a enter to chan: a
+[WARNING][2024-01-22 00:04:01]127.0.0.1:60590 sent a badpacket
+[INFO][2024-01-22 00:04:42]Disconnect from 127.0.0.1:60590
+[INFO][2024-01-22 00:04:48]Connect to 127.0.0.1:53126
+[INFO][2024-01-22 00:04:50]127.0.0.1:53126 set name: sb
+[INFO][2024-01-22 00:04:53]sb enter to chan: a
+[WARNING][2024-01-22 00:04:53]127.0.0.1:53126 sent a badpacket
+[INFO][2024-01-22 00:04:54]sb exit from chan: a
+[INFO][2024-01-22 00:13:40]Disconnect from 127.0.0.1:53126

@@ -26,14 +26,16 @@ chan_window.withdraw()
 
 chan_label1 = tk.Label(chan_window, width=10, text="Channels:")
 chan_label1.place(y=40, x=50)
+
 chan_selbox1 = ttk.Combobox(chan_window, width=11, state='readonly')
 # chan_selbox1.current(0)
 chan_selbox1.place(y=40, x=155)
+
 chan_butt_join = tk.Button(chan_window, width=5, text="Join")
 chan_butt_join.place(y=80, x=70)
+
 chan_butt_exit = tk.Button(chan_window, width=5, text="Exit")
 chan_butt_exit.place(y=80, x=170)
-
 #Channels window------------------------------------------------------------------
 
 #Frames----------------------------------------------------------------------------
@@ -166,12 +168,15 @@ def connserver():
     except socket.error:
         return False
 
-def to_channel(mode, name):
+def to_channel():
     if connserver():
-        if mode == "enter":
-            sock.send(json.dumps({"t": "204", "c": name}).encode("utf-8"))
-        elif mode == "exit":
-            sock.send(json.dumps({"t": "205", "c": name}).encode("utf-8"))
+        sendata(json.dumps({"t": "204", "c": chan_selbox1.get()}))
+    else:
+        pass
+
+def exc_channel():
+    if connserver():
+        sendata(json.dumps({"t": "205", "c": chan_selbox1.get()}))
     else:
         pass
 
@@ -208,6 +213,7 @@ def procthread():
             
             elif data["t"] == "300":
                 printf("Successfully set name")
+                sendata("{\"t\": \"203\"}")
             
             elif data["t"] == "301":
                 show_info("已设置名称或名称已被使用")
@@ -219,10 +225,12 @@ def procthread():
                 show_info("未设置名称")
 
             elif data["t"] == "304":
-                printf("Kicked out of server")
+                show_info("你已被服务器踢出")
+                # printf("Kicked out of server")
 
             elif data["t"] == "305":
-                printf("Banned from server")
+                show_info("你已被服务器封禁")
+                # printf("Banned from server")
 
             elif data["t"] == "306":
                 pass
@@ -256,6 +264,10 @@ def procthread():
                 text = "在线列表:\n" + to
 
                 change_onli(text)
+
+            elif data["t"] == "411":
+                l = data["l"].split(",")
+                chan_selbox1['value'] = tuple(l)
 
         except json.decoder.JSONDecodeError:
             printf("json Recv Badpackets: "+msg)
@@ -334,6 +346,8 @@ send_button.config(command=send_butt)
 conn_button.config(command=connect)
 disc_button.config(command=disconnect)
 setn_button.config(command=setname)
+chan_butt_join.config(command=to_channel)
+chan_butt_exit.config(command=exc_channel)
 
 root.bind("<Return>", send_enter)
 root.bind("<KP_Enter>", send_enter)

@@ -90,10 +90,12 @@ def kickip(ipaddr):
     connaddr[ipaddr].send("{\"t\":\"304\"}".encode('utf-8'))
     connaddr[ipaddr].close()
 
+@badpacket_warn(callback)
 def p0(conn, data):
     pass
     # logger.info("recv 0 from "+connaddr[conn])
 
+@badpacket_warn(callback)
 def p200(conn, data): #client login
     if data["n"] in online.values() or conn in online.keys():
         conn.send("{\"t\":\"301\"}".encode('utf-8'))
@@ -112,6 +114,7 @@ def p200(conn, data): #client login
     else:
         conn.send("{\"t\":\"302\"}".encode('utf-8'))
 
+@badpacket_warn(callback)
 def p201(conn, data): #client msg
     if conn not in online.keys():
         conn.send("{\"t\":\"303\"}".encode('utf-8'))
@@ -125,6 +128,7 @@ def p201(conn, data): #client msg
             online[u].send(text.encode('utf-8'))
         logger.info("Recv from "+online[conn]+": "+data["m"]+" to chan: "+data["c"])
 
+@badpacket_warn(callback)
 def p202(conn, data): #client get online
     if conn not in online.keys():
         conn.send("{\"t\":\"303\"}".encode('utf-8'))
@@ -143,7 +147,8 @@ def p202(conn, data): #client get online
 
     conn.send(text.encode('utf-8'))
 
-def p203(conn, data):
+@badpacket_warn(callback)
+def p203(conn, data): #client get chans
     if conn not in online.keys():
         conn.send("{\"t\":\"303\"}".encode('utf-8'))
         return 0
@@ -157,7 +162,8 @@ def p203(conn, data):
 
     conn.send(text.encode('utf-8'))
 
-def p204(conn, data):
+@badpacket_warn(callback)
+def p204(conn, data): #client join chan
     if conn not in online.keys():
         conn.send("{\"t\":\"303\"}".encode('utf-8'))
         return 0
@@ -185,7 +191,8 @@ def p204(conn, data):
 
     logger.info(online[conn]+" enter to chan: "+data["c"])
 
-def p205(conn, data):
+@badpacket_warn(callback)
+def p205(conn, data): #client exit chan
     if conn not in online.keys():
         conn.send("{\"t\":\"303\"}".encode('utf-8'))
         return 0

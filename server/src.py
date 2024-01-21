@@ -1,5 +1,17 @@
 import threading,json
 
+def badpacket_warn(callback):
+    def outer(func):
+        def inner(*args, **kwargs):
+            try:
+                return func(*args, **kwargs)
+            except Exception as e:
+                callback("warnbp", args[0])
+
+        return inner
+    
+    return outer
+
 class BidirectionalDict: #good class from gpt and me
     def __init__(self):
         self.dict = {}
@@ -56,11 +68,10 @@ class EventManager: #events
         if event_type in self.events:
             for func in self.events[event_type]:
                 # func(conn, *args, **kwargs)
-                threading.Thread(target=func, args=(conn, *args), kwargs=kwargs).start()
+                threading.Thread(target=func, args=(conn, *args), kwargs=kwargs).start() #dont worry about performance
         else:
             self.callback("warnbp", conn)
             # logger.warning(connaddr[conn]+" sent a badpacket")
-            #send 0
     
     def set_callback(self, func):
         self.callback = func
