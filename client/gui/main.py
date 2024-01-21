@@ -117,6 +117,7 @@ send_button.pack(side="right", padx=5)
 
 #Bottom-Frames----------------------------------------------------------------------------
 
+tempg = ""
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 channels = {} #str: arr, "chan_name": ["msg", "onli"]
 dataqueue = Queue()
@@ -164,6 +165,15 @@ def connserver():
         return True
     except socket.error:
         return False
+
+def to_channel(mode, name):
+    if connserver():
+        if mode == "enter":
+            sock.send(json.dumps({"t": "204", "c": name}).encode("utf-8"))
+        elif mode == "exit":
+            sock.send(json.dumps({"t": "205", "c": name}).encode("utf-8"))
+    else:
+        pass
 
 def recvthread():
     global sock, recvth
