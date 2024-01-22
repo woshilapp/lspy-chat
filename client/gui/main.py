@@ -154,6 +154,11 @@ def change_onli(str):
     onli_textbox.insert(tk.END, "在线列表:\n"+str)
     onli_textbox.config(state="disabled")
 
+def init_chan(name):
+    global channels
+
+    channels[name] = ["", ""]
+
 def sendata(msg):
     sock.send(str(msg).encode('utf-8'))
     
@@ -233,6 +238,7 @@ def procthread():
                 # printf("Banned from server")
 
             elif data["t"] == "306":
+                #do something
                 pass
 
             elif data["t"] == "307":
@@ -256,18 +262,19 @@ def procthread():
                 sendata("{\"t\": \"202\"}") #because new user will recv it
 
             elif data["t"] == "410":
-                to = ""
+                text = "在线列表:\n"
 
                 for t in data["l"].split(","):
                     to += t + "\n"
 
-                text = "在线列表:\n" + to
+                channels[data["c"]][1] = text
 
-                change_onli(text)
+                # change_onli(text)
 
             elif data["t"] == "411":
                 l = data["l"].split(",")
                 chan_selbox1['value'] = tuple(l)
+                chan_selbox1.current(0)
 
         except json.decoder.JSONDecodeError:
             printf("json Recv Badpackets: "+msg)

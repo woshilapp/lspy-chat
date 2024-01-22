@@ -326,6 +326,8 @@ def cli():
             if args[0] == "exit":
                 f = open("./data/ban.json", "w")
                 f.write(json.dumps(ban, indent=4))
+                f.flush()   # wtf
+                f.close()
                 cm.__del__()
                 exitt = False
 
