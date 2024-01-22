@@ -410,7 +410,7 @@ def cli():
             # elif args[0] == "eval":
             #     eval(args[1])
         
-        except IndexError:
+        except Exception:
             pass
 
 threading.Thread(target=accept_thread, name="accp_th").start()

@@ -93,7 +93,7 @@ ip_label.pack(side="right", padx=3)
 
 #Middle-Frames----------------------------------------------------------------------------
 
-chan_listbox = tk.Listbox(middle_frame, width=20)
+chan_listbox = tk.Listbox(middle_frame, width=20, exportselection=False)
 chan_listbox.pack(fill="y", side="left", padx=3, pady=3)
 
 onli_textbox = tk.Text(middle_frame, width=18, state="disabled")
@@ -119,7 +119,6 @@ send_button.pack(side="right", padx=5)
 
 #Bottom-Frames----------------------------------------------------------------------------
 
-tempg = ""
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 channels = {} #str: arr, "chan_name": ["msg", "onli"]
 dataqueue = Queue()
@@ -143,7 +142,7 @@ def printf(text):
 
 def change_textbox(str):
     msg_textbox.config(state="normal")
-    onli_textbox.delete(1.0, tk.END)
+    msg_textbox.delete(1.0, tk.END)
     msg_textbox.insert(tk.END, str)
     msg_textbox.yview(tk.END)
     msg_textbox.config(state="disabled")
@@ -163,7 +162,7 @@ def sendata(msg):
     sock.send(str(msg).encode('utf-8'))
     
 def sendmsg(msg):
-    text = "{\"t\":\"201\", \"m\":\"" + msg + "\"}"
+    text = "{\"t\":\"201\", \"m\":\"" + msg + "\", \"c\": \"" + chan_listbox.get(chan_listbox.curselection()[0]) + "\"}"
     sendata(text)
 
 def connserver():
@@ -176,35 +175,42 @@ def connserver():
 def to_channel():
     if connserver():
         sendata(json.dumps({"t": "204", "c": chan_selbox1.get()}))
-    else:
-        pass
 
 def exc_channel():
     if connserver():
-        sendata(json.dumps({"t": "205", "c": chan_selbox1.get()}))
-    else:
-        pass
+        if chan_selbox1.get() in channels.keys():
+            sendata(json.dumps({"t": "205", "c": chan_selbox1.get()}))
+            channels.pop(chan_selbox1.get())
+            chan_listbox.delete(chan_listbox.get(0, tk.END).index(chan_selbox1.get()))
+            msg_textbox.delete(1.0, tk.END)
+            onli_textbox.delete(1.0, tk.END)
 
 def recvthread():
-    global sock, recvth
+    global sock, recvth, channels
     while True:
         try:
-            data = sock.recv(1024).decode("utf-8")
+            data = sock.recv(512).decode("utf-8")
             if data == '':
-                printf("Disconnect from server")
                 change_onli("")
                 recvth = Thread(target=recvthread,daemon=True)
                 sock = socket.socket(family=socket.AF_INET,type=socket.SOCK_STREAM)
                 sock.setblocking(True)
+                channels = {}
+                chan_listbox.delete(0, "end")
+                chan_selbox1.delete(0, "end")
+                printf("Disconnect from server")
                 break
             if data != None:
                 dataqueue.put_nowait(data)
         except socket.error:
-            printf("Disconnect from server")
             change_onli("")
             recvth = Thread(target=recvthread,daemon=True)
             sock = socket.socket(family=socket.AF_INET,type=socket.SOCK_STREAM)
             sock.setblocking(True)
+            channels = {}
+            chan_listbox.delete(0, "end")
+            chan_selbox1.delete(0, "end")
+            printf("Disconnect from server")
             break
 
 def procthread():
@@ -238,7 +244,6 @@ def procthread():
                 # printf("Banned from server")
 
             elif data["t"] == "306":
-                #do something
                 pass
 
             elif data["t"] == "307":
@@ -255,21 +260,38 @@ def procthread():
 
             elif data["t"] == "400":
                 # printf("<" + data["u"] + ">" + data["m"])
-                channels[data["c"]][0] += "\n" + "<" + data["u"] + ">" + data["m"]
+
+                if data["c"] not in channels.keys():
+                    init_chan(data["c"])
+                    chan_listbox.insert("end", data["c"])
+                    chan_listbox.select_set(0)
+
+                channels[data["c"]][0] += "<" + data["u"] + ">" + data["m"] + "\n"
+
+                change_textbox(channels[chan_listbox.get(chan_listbox.curselection()[0])][0])
 
             elif data["t"] == "401":
-                printf("[Server]" + data["m"])
-                sendata("{\"t\": \"202\"}") #because new user will recv it
+                # printf("[Server]" + data["m"])
+
+                if data["c"] not in channels.keys():
+                    init_chan(data["c"])
+                    chan_listbox.insert("end", data["c"])
+                    chan_listbox.select_set(0)
+
+                channels[data["c"]][0] += "[Server]" + data["m"] + "\n"
+                sendata("{\"t\": \"202\", \"c\": \"" + data["c"] + "\"}") #because new user will recv it
+
+                change_textbox(channels[chan_listbox.get(chan_listbox.curselection()[0])][0])
 
             elif data["t"] == "410":
-                text = "在线列表:\n"
+                text = ""
 
                 for t in data["l"].split(","):
-                    to += t + "\n"
+                    text += t + "\n"
 
                 channels[data["c"]][1] = text
 
-                # change_onli(text)
+                change_onli(channels[chan_listbox.get(chan_listbox.curselection()[0])][1])
 
             elif data["t"] == "411":
                 l = data["l"].split(",")
@@ -284,6 +306,9 @@ def procthread():
             printf("key Recv Badpackets: "+msg)
             continue
 
+        except IndexError:
+            continue
+
         except TypeError:
             continue
 
@@ -295,6 +320,10 @@ def send_enter(event):
             say_input.delete(0, tk.END)
         else:
             pass
+
+def on_selectd(event):
+    change_textbox(channels[chan_listbox.get(chan_listbox.curselection()[0])][0])
+    change_onli(channels[chan_listbox.get(chan_listbox.curselection()[0])][1])
 
 def send_butt():
     if say_input.get() != "":
@@ -348,6 +377,8 @@ toolbar.add_command(label="Exit", command=on_closing)
 onli_textbox.config(state="normal") #init online
 onli_textbox.insert(tk.END, "在线列表:")
 onli_textbox.config(state="disabled")
+
+chan_listbox.bind("<<ListboxSelect>>", on_selectd)
 
 send_button.config(command=send_butt)
 conn_button.config(command=connect)
