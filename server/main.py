@@ -1,8 +1,10 @@
-#lspy-chat server by Python 3.10.12
-#made on 2023/12/02
-import socket,json,threading,logging,os,time,yaml,re
+#lspy-chat server test by Python 3.12.1
+#finish 0.3 2024/01/03
+#0.4 use the new proctrol
+import socket,json,threading,logging,time,yaml,re
 from prompt_toolkit import prompt,print_formatted_text as printf
 from prompt_toolkit.history import InMemoryHistory
+from src import *
 
 class myconhandler(logging.StreamHandler): #重写StreamHandler实现切换输出函数的功能
     def emit(self, record):
@@ -14,35 +16,6 @@ class myconhandler(logging.StreamHandler): #重写StreamHandler实现切换输�
             self.flush()
         except Exception:
             self.handleError(record)
-
-class EventManager: #events
-    def __init__(self): #self
-        self.events = {}
-
-    def reg_event(self, event_type, func):
-        if event_type in self.events:
-            self.events[event_type].append(func)
-        else:
-            self.events[event_type] = [func]
-
-    def remove_event(self, event_type, func):
-        if event_type in self.events:
-            if func in self.events[event_type]:
-                self.events[event_type].remove(func)
-
-    def patch_event(self, event_type, conn, *args, **kwargs):
-        if event_type in self.events:
-            for func in self.events[event_type]:
-                func(conn, *args, **kwargs)
-        else:
-            logger.warning(connaddr[conn]+" sent a badpacket")
-            #send 0
-
-    def init_event(self):
-        self.reg_event("0", p0)
-        self.reg_event("200", p200)
-        self.reg_event("201", p201)
-        self.reg_event("202", p202)
 
 filehandler = logging.FileHandler(filename='./data/server.log',mode='a',encoding='utf-8')
 filehandler.setFormatter(logging.Formatter("[%(levelname)s][%(asctime)s]%(message)s",datefmt="%Y-%m-%d %H:%M:%S"))
@@ -75,6 +48,7 @@ try:
     sock.bind((ip, port))
 except OSError:
     logger.error("The port or address already use")
+
 sock.settimeout(3)
 sock.setblocking(False)
 sock.listen(10)
@@ -83,36 +57,45 @@ logger.info("Listen on "+ip+":"+str(port))
 
 slt = 0.000001 #const of sleep
 connlist = {} #connection list(sock:bool) bool is run able
-online = {} #online user(sock:name)
-connaddr = {} #socket address(sock:addr)
+online = BidirectionalDict() #online user(sock:name)
+connaddr = BidirectionalDict() #socket address(sock:addr)
 em = EventManager() #event manager
+cm = ChanManager() #channel manager
 exitt = True #broadcast exit signal
 
-def vagetkey(v, d): #value, dict
-    for i in d.keys():
-        if d[i] == v:
-            return i
+def callback(type, conn):
+    if type == "warnbp":
+        logger.warning(connaddr[conn]+" sent a badpacket")
+
+em.set_callback(callback)
+
+# def vagetkey(v, d): #value, dict
+#     for i in d.keys():
+#         if d[i] == v:
+#             return i
     
-    return False
+#     return False           we needn't it because BidirectionalDict
 
 def kick(name):
-    if vagetkey(name, online) == False:
+    if online[name] == False:
         return False
 
-    vagetkey(name, online).send("{\"t\":\"304\"}".encode('utf-8'))
-    vagetkey(name, online).close()
+    online[name].send("{\"t\":\"304\"}".encode('utf-8'))
+    online[name].close()
 
 def kickip(ipaddr):
-    if vagetkey(ipaddr, connaddr) == False:
+    if connaddr[ipaddr] == False:
         return False
 
-    vagetkey(ipaddr, connaddr).send("{\"t\":\"304\"}".encode('utf-8'))
-    vagetkey(ipaddr, connaddr).close()
+    connaddr[ipaddr].send("{\"t\":\"304\"}".encode('utf-8'))
+    connaddr[ipaddr].close()
 
+@badpacket_warn(callback)
 def p0(conn, data):
     pass
     # logger.info("recv 0 from "+connaddr[conn])
 
+@badpacket_warn(callback)
 def p200(conn, data): #client login
     if data["n"] in online.values() or conn in online.keys():
         conn.send("{\"t\":\"301\"}".encode('utf-8'))
@@ -126,38 +109,119 @@ def p200(conn, data): #client login
 
         online[conn] = data["n"]
         conn.send("{\"t\":\"300\"}".encode('utf-8'))
-        text = "{\"t\":\"401\", \"m\":\"" + data["n"] + " Joined the server\"}"
-        for c in online.keys():
-            c.send(text.encode('utf-8'))
+
         logger.info(connaddr[conn]+" set name: "+data["n"])
     else:
         conn.send("{\"t\":\"302\"}".encode('utf-8'))
 
+@badpacket_warn(callback)
 def p201(conn, data): #client msg
     if conn not in online.keys():
         conn.send("{\"t\":\"303\"}".encode('utf-8'))
-    else:
-        time.sleep(0.01) #send too fast
-        text = "{\"t\":\"400\", \"m\":\"" + data["m"] + "\", \"u\":\"" + online[conn] + "\"}"
-        for c in online.keys():
-            c.send(text.encode('utf-8'))
-        logger.info("Recv from "+online[conn]+": "+data["m"])
 
+    if not cm.in_chan(data["c"], online[conn]):
+        conn.send("{\"t\":\"307\"}".encode('utf-8'))
+
+    else:
+        text = "{\"t\":\"400\", \"m\":\"" + data["m"] + "\", \"u\":\"" + online[conn] + "\", \"c\": \"" + data["c"] + "\"}"
+        for u in cm.chand[data["c"]]:
+            online[u].send(text.encode('utf-8'))
+        logger.info("Recv from "+online[conn]+": "+data["m"]+" to chan: "+data["c"])
+
+@badpacket_warn(callback)
 def p202(conn, data): #client get online
     if conn not in online.keys():
         conn.send("{\"t\":\"303\"}".encode('utf-8'))
         return 0
     
+    if not cm.in_chan(data["c"], online[conn]):
+        conn.send("{\"t\":\"307\"}".encode('utf-8'))
+        return 0
+    
     onli = ""
 
-    for i in online.values():
+    for i in cm.chand[data["c"]]:
         onli = onli+","+i
 
-    text = "{\"t\":\"410\", \"l\":\"" + onli[1:] + "\"}"
+    text = "{\"t\":\"410\", \"l\":\"" + onli[1:] + "\", \"c\": \"" + data["c"] + "\"}"
 
     conn.send(text.encode('utf-8'))
 
-em.init_event() #init events
+@badpacket_warn(callback)
+def p203(conn, data): #client get chans
+    if conn not in online.keys():
+        conn.send("{\"t\":\"303\"}".encode('utf-8'))
+        return 0
+    
+    chans = ""
+
+    for chan in cm.chand.keys():
+        chans = chans+","+chan
+
+    text = "{\"t\":\"411\", \"l\":\"" + chans[1:] + "\"}"
+
+    conn.send(text.encode('utf-8'))
+
+@badpacket_warn(callback)
+def p204(conn, data): #client join chan
+    if conn not in online.keys():
+        conn.send("{\"t\":\"303\"}".encode('utf-8'))
+        return 0
+
+    if not cm.have_chan(data["c"]):
+        conn.send("{\"t\":\"309\"}".encode('utf-8'))
+        return 0
+
+    if online[conn] in cm.chand[data["c"]]:
+        conn.send("{\"t\":\"308\"}".encode('utf-8'))
+        return 0
+    
+    if not cm.have_perm(data["c"], online[conn]): #permission check
+        conn.send("{\"t\":\"310\"}".encode('utf-8'))
+        return 0
+
+    cm.add_to_chan(data["c"], online[conn])
+
+    conn.send("{\"t\":\"306\"}".encode('utf-8'))
+
+    text = "{\"t\":\"401\", \"m\":\"" + online[conn] + " Joined the channel\", \"c\": \"" + data["c"] + "\"}"
+
+    for u in cm.chand[data["c"]]:
+        online[u].send(text.encode('utf-8'))
+
+    logger.info(online[conn]+" enter to chan: "+data["c"])
+
+@badpacket_warn(callback)
+def p205(conn, data): #client exit chan
+    if conn not in online.keys():
+        conn.send("{\"t\":\"303\"}".encode('utf-8'))
+        return 0
+
+    if not cm.have_chan(data["c"]):
+        conn.send("{\"t\":\"309\"}".encode('utf-8'))
+        return 0
+
+    if online[conn] not in cm.chand[data["c"]]:
+        conn.send("{\"t\":\"307\"}".encode('utf-8'))
+        return 0
+
+    cm.remove_from_chan(data["c"], online[conn])
+
+    text = "{\"t\":\"401\", \"m\":\"" + online[conn] + " Exited the channel\", \"c\": \"" + data["c"] + "\"}"
+
+    for u in cm.chand[data["c"]]:
+        online[u].send(text.encode('utf-8'))
+
+    logger.info(online[conn]+" exit from chan: "+data["c"])
+
+# init_event
+em.reg_event("0", p0)
+em.reg_event("200", p200)
+em.reg_event("201", p201)
+em.reg_event("202", p202)
+em.reg_event("203", p203)
+em.reg_event("204", p204)
+em.reg_event("205", p205)
 
 def accept_thread():
     while exitt:
@@ -171,6 +235,7 @@ def accept_thread():
                     conn.close()
                 except Exception:
                     pass
+                
                 continue
 
             conn.setblocking(False)
@@ -194,12 +259,18 @@ def clear_thread():
                 logger.info("Disconnect from "+connaddr[conn])
                 connlist[conn] = False
                 needrm.append(conn)
-                connaddr.pop(conn)
+                connaddr.del_pair(conn)
                 if conn in online.keys():
-                    text = "{\"t\":\"401\", \"m\":\"" + online[conn] + " Exited the server\"}"
-                    online.pop(conn)
-                    for c in online.keys():
-                        c.send(text.encode('utf-8'))
+                    for chan in cm.chand.keys():
+                        if online[conn] in cm.chand[chan]:
+                            cm.remove_from_chan(chan, online[conn])
+
+                            text = "{\"t\":\"401\", \"m\":\"" + online[conn] + " Exited the channel\", \"c\": \"" + chan + "\"}"
+
+                            for u in cm.chand[chan]: #broadcast
+                                online[u].send(text.encode('utf-8'))
+                    
+                    online.del_pair(conn)
                     
             except Exception as e:
                 logger.error("Uncaught error: "+str(e))
@@ -230,8 +301,9 @@ def recv_thread(conn):
             except KeyError:
                 logger.warning(connaddr[conn]+" sent a badpacket")
         # connlist.pop(conn) #it will make danger
-    except Exception:
-        pass
+    except Exception as e:
+        # pass
+        logger.debug(str(type(e))+" "+str(e))
 
 def cli():
     global exitt, ban
@@ -252,18 +324,27 @@ def cli():
         
         try:
             if args[0] == "exit":
-                exitt = 0
                 f = open("./data/ban.json", "w")
                 f.write(json.dumps(ban, indent=4))
-                f.flush()
+                f.flush()   # wtf
                 f.close()
-                os._exit(0)
+                cm.__del__()
+                exitt = False
 
-            if args[0] == "say":
-                text = "{\"t\":\"401\", \"m\":\"" + input_text[4:] + "\"}"
+            if args[0] == "saya":
+                text = "{\"t\":\"401\", \"m\":\"" + input_text[5:] + "\", \"c\": \"*\"}"
                 for conn in online.keys():
-                    conn.send(text.encode('utf-8'))
-                logger.info("Recv from [Server]: " + input_text[4:])
+                    if type(conn) == str:
+                        continue
+                    else:
+                        conn.send(text.encode('utf-8'))
+                logger.info("Recv from [Server]: " + input_text[5:] + " to chan: *")
+
+            elif args[0] == "say":
+                text = "{\"t\":\"401\", \"m\":\"" + input_text[5+len(args[1]):] + "\", \"c\": \"" + args[1] + "\"}"
+                for u in cm.chand[args[1]]:
+                    online[u].send(text.encode('utf-8'))
+                logger.info("Recv from [Server]: " + input_text[5+len(args[1]):] + " to chan: " + args[1])
 
             elif args[0] == "kick":
                 kick(args[1])
@@ -276,8 +357,8 @@ def cli():
                     logger.info(args[1] + " already banned")
                 else:
                     if args[1] in online.values():
-                        vagetkey(args[1], online).send("{\"t\":\"305\"}".encode('utf-8'))
-                        vagetkey(args[1], online).close()
+                        online[args[1]].send("{\"t\":\"305\"}".encode('utf-8'))
+                        online[args[1]].close()
 
                     ban["id"].append(args[1])
 
@@ -296,8 +377,8 @@ def cli():
                 else:
                     for addr in connaddr.values():
                         if args[1] in addr:
-                            vagetkey(addr, connaddr).send("{\"t\":\"305\"}".encode('utf-8'))
-                            vagetkey(addr, connaddr).close()
+                            connaddr[addr].send("{\"t\":\"305\"}".encode('utf-8'))
+                            connaddr[addr].close()
 
                     ban["ip"].append(args[1])
 
@@ -311,15 +392,28 @@ def cli():
                     logger.info(args[1] + " unbanned from server")
 
             elif args[0] == "list":
-                printf(str(list(online.values())))
+                printf(str(cm.chand[args[1]]))
+
+            elif args[0] == "listchan":
+                printf(str(list(cm.chand.keys())))
+
+            elif args[0] == "chanper": #chanper %chan% [b/w]
+                cm.set_chan_perm(args[1], args[2])
+
+            elif args[0] == "userper": #userper %user% [add/del] %chan%
+                if args[2] == "add":
+                    cm.add_perm(args[3], args[1])
+                
+                if args[2] == "del":
+                    cm.remove_perm(args[3], args[1])
 
             # elif args[0] == "eval":
             #     eval(args[1])
         
-        except IndexError:
+        except Exception:
             pass
 
 threading.Thread(target=accept_thread, name="accp_th").start()
 threading.Thread(target=clear_thread, name="clar_th").start()
 logger.info("Server Started")
-cli()
+cli() #will it longer? (shitcode)

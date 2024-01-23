@@ -1,13 +1,42 @@
 import tkinter as tk
+import tkinter.ttk as ttk
 import tkinter.messagebox as tkmsgbox
 from threading import Thread
 from queue import Queue
 import socket, json, re, os
 
 root = tk.Tk()
-root.geometry("760x580")
+root.geometry("900x580")
 root.title("Tepy-Chat GUI Client")
 root.configure(bg="white")
+
+#Toolbar
+toolbar = tk.Menu(root)
+
+root.config(menu=toolbar)
+
+#Channels window------------------------------------------------------------------
+
+chan_window = tk.Toplevel(root)
+chan_window.geometry("330x144")
+chan_window.title("Channels")
+chan_window.resizable(0, 0)
+chan_window.protocol("WM_DELETE_WINDOW", chan_window.withdraw) #don't del it
+chan_window.withdraw()
+
+chan_label1 = tk.Label(chan_window, width=10, text="Channels:")
+chan_label1.place(y=40, x=50)
+
+chan_selbox1 = ttk.Combobox(chan_window, width=11, state='readonly')
+# chan_selbox1.current(0)
+chan_selbox1.place(y=40, x=155)
+
+chan_butt_join = tk.Button(chan_window, width=5, text="Join")
+chan_butt_join.place(y=80, x=70)
+
+chan_butt_exit = tk.Button(chan_window, width=5, text="Exit")
+chan_butt_exit.place(y=80, x=170)
+#Channels window------------------------------------------------------------------
 
 #Frames----------------------------------------------------------------------------
 
@@ -64,6 +93,9 @@ ip_label.pack(side="right", padx=3)
 
 #Middle-Frames----------------------------------------------------------------------------
 
+chan_listbox = tk.Listbox(middle_frame, width=20, exportselection=False)
+chan_listbox.pack(fill="y", side="left", padx=3, pady=3)
+
 onli_textbox = tk.Text(middle_frame, width=18, state="disabled")
 onli_textbox.pack(fill="y", side="right", padx=3, pady=3)
 
@@ -88,6 +120,7 @@ send_button.pack(side="right", padx=5)
 #Bottom-Frames----------------------------------------------------------------------------
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+channels = {} #str: arr, "chan_name": ["msg", "onli"]
 dataqueue = Queue()
 
 def on_closing():
@@ -107,11 +140,29 @@ def printf(text):
     msg_textbox.yview(tk.END)
     msg_textbox.config(state="disabled")
 
+def change_textbox(str):
+    msg_textbox.config(state="normal")
+    msg_textbox.delete(1.0, tk.END)
+    msg_textbox.insert(tk.END, str)
+    msg_textbox.yview(tk.END)
+    msg_textbox.config(state="disabled")
+
+def change_onli(str):
+    onli_textbox.config(state="normal")
+    onli_textbox.delete(1.0, tk.END)
+    onli_textbox.insert(tk.END, "在线列表:\n"+str)
+    onli_textbox.config(state="disabled")
+
+def init_chan(name):
+    global channels
+
+    channels[name] = ["", ""]
+
 def sendata(msg):
     sock.send(str(msg).encode('utf-8'))
     
 def sendmsg(msg):
-    text = "{\"t\":\"201\", \"m\":\"" + msg + "\"}"
+    text = "{\"t\":\"201\", \"m\":\"" + msg + "\", \"c\": \"" + chan_listbox.get(chan_listbox.curselection()[0]) + "\"}"
     sendata(text)
 
 def connserver():
@@ -121,24 +172,45 @@ def connserver():
     except socket.error:
         return False
 
+def to_channel():
+    if connserver():
+        sendata(json.dumps({"t": "204", "c": chan_selbox1.get()}))
+
+def exc_channel():
+    if connserver():
+        if chan_selbox1.get() in channels.keys():
+            sendata(json.dumps({"t": "205", "c": chan_selbox1.get()}))
+            channels.pop(chan_selbox1.get())
+            chan_listbox.delete(chan_listbox.get(0, tk.END).index(chan_selbox1.get()))
+            msg_textbox.delete(1.0, tk.END)
+            onli_textbox.delete(1.0, tk.END)
+
 def recvthread():
-    global sock, recvth
+    global sock, recvth, channels
     while True:
         try:
-            data = sock.recv(1024).decode("utf-8")
+            data = sock.recv(512).decode("utf-8")
             if data == '':
-                printf("Disconnect from server")
+                change_onli("")
                 recvth = Thread(target=recvthread,daemon=True)
                 sock = socket.socket(family=socket.AF_INET,type=socket.SOCK_STREAM)
                 sock.setblocking(True)
+                channels = {}
+                chan_listbox.delete(0, "end")
+                chan_selbox1.delete(0, "end")
+                printf("Disconnect from server")
                 break
             if data != None:
                 dataqueue.put_nowait(data)
         except socket.error:
-            printf("Disconnect from server")
+            change_onli("")
             recvth = Thread(target=recvthread,daemon=True)
             sock = socket.socket(family=socket.AF_INET,type=socket.SOCK_STREAM)
             sock.setblocking(True)
+            channels = {}
+            chan_listbox.delete(0, "end")
+            chan_selbox1.delete(0, "end")
+            printf("Disconnect from server")
             break
 
 def procthread():
@@ -152,6 +224,7 @@ def procthread():
             
             elif data["t"] == "300":
                 printf("Successfully set name")
+                sendata("{\"t\": \"203\"}")
             
             elif data["t"] == "301":
                 show_info("已设置名称或名称已被使用")
@@ -163,30 +236,67 @@ def procthread():
                 show_info("未设置名称")
 
             elif data["t"] == "304":
-                printf("Kicked out of server")
+                show_info("你已被服务器踢出")
+                # printf("Kicked out of server")
 
             elif data["t"] == "305":
-                printf("Banned from server")
+                show_info("你已被服务器封禁")
+                # printf("Banned from server")
+
+            elif data["t"] == "306":
+                pass
+
+            elif data["t"] == "307":
+                pass
+
+            elif data["t"] == "308":
+                pass
+
+            elif data["t"] == "309":
+                pass
+
+            elif data["t"] == "310":
+                show_warn("你没有权限进入这个频道")
 
             elif data["t"] == "400":
-                printf("<" + data["u"] + ">" + data["m"])
+                # printf("<" + data["u"] + ">" + data["m"])
+
+                if data["c"] not in channels.keys():
+                    init_chan(data["c"])
+                    chan_listbox.insert("end", data["c"])
+                    chan_listbox.select_set(0)
+
+                channels[data["c"]][0] += "<" + data["u"] + ">" + data["m"] + "\n"
+
+                change_textbox(channels[chan_listbox.get(chan_listbox.curselection()[0])][0])
 
             elif data["t"] == "401":
-                printf("[Server]" + data["m"])
-                sendata("{\"t\": \"202\"}") #because new user will recv it
+                # printf("[Server]" + data["m"])
+
+                if data["c"] not in channels.keys():
+                    init_chan(data["c"])
+                    chan_listbox.insert("end", data["c"])
+                    chan_listbox.select_set(0)
+
+                channels[data["c"]][0] += "[Server]" + data["m"] + "\n"
+                sendata("{\"t\": \"202\", \"c\": \"" + data["c"] + "\"}") #because new user will recv it
+
+                change_textbox(channels[chan_listbox.get(chan_listbox.curselection()[0])][0])
 
             elif data["t"] == "410":
-                to = ""
+                text = ""
 
                 for t in data["l"].split(","):
-                    to += t + "\n"
+                    text += t + "\n"
 
-                text = "在线列表:\n" + to
+                channels[data["c"]][1] = text
 
-                onli_textbox.config(state="normal")
-                onli_textbox.delete(1.0, tk.END)
-                onli_textbox.insert(tk.END, text)
-                onli_textbox.config(state="disabled")
+                change_onli(channels[chan_listbox.get(chan_listbox.curselection()[0])][1])
+
+            elif data["t"] == "411":
+                l = data["l"].split(",")
+                chan_selbox1['value'] = tuple(l)
+                chan_selbox1.current(0)
 
         except json.decoder.JSONDecodeError:
             printf("json Recv Badpackets: "+msg)
@@ -194,6 +304,9 @@ def procthread():
 
         except KeyError:
             printf("key Recv Badpackets: "+msg)
+            continue
+
+        except IndexError:
             continue
 
         except TypeError:
@@ -207,6 +320,10 @@ def send_enter(event):
             say_input.delete(0, tk.END)
         else:
             pass
+
+def on_selectd(event):
+    change_textbox(channels[chan_listbox.get(chan_listbox.curselection()[0])][0])
+    change_onli(channels[chan_listbox.get(chan_listbox.curselection()[0])][1])
 
 def send_butt():
     if say_input.get() != "":
@@ -239,10 +356,6 @@ def connect():
 
 def disconnect():
     if connserver():
-        onli_textbox.config(state="normal")
-        onli_textbox.delete(1.0, tk.END)
-        onli_textbox.insert(tk.END, "在线列表:")
-        onli_textbox.config(state="disabled")
         sock.close()
     else:
         show_info("未连接到服务器")
@@ -258,14 +371,21 @@ def setname():
     else:
         show_info("未连接到服务器")
 
+toolbar.add_command(label="Channels", command=chan_window.deiconify)
+toolbar.add_command(label="Exit", command=on_closing)
+
 onli_textbox.config(state="normal") #init online
 onli_textbox.insert(tk.END, "在线列表:")
 onli_textbox.config(state="disabled")
+
+chan_listbox.bind("<<ListboxSelect>>", on_selectd)
 
 send_button.config(command=send_butt)
 conn_button.config(command=connect)
 disc_button.config(command=disconnect)
 setn_button.config(command=setname)
+chan_butt_join.config(command=to_channel)
+chan_butt_exit.config(command=exc_channel)
 
 root.bind("<Return>", send_enter)
 root.bind("<KP_Enter>", send_enter)

@@ -1,5 +1,5 @@
-#lspy-chat client by Python 3.10.12
-#made on 2023/12/02
+#lspy-chat client test by Python 3.12.1
+#
 import socket,time,os,json,queue
 from prompt_toolkit import prompt,print_formatted_text as printf
 from prompt_toolkit.completion import Completer,Completion
@@ -7,13 +7,14 @@ from prompt_toolkit.history import InMemoryHistory
 from prompt_toolkit.shortcuts import CompleteStyle
 from threading import Thread
 
+default_chan = "" #default channel
 dataqueue = queue.Queue() #procth too slow
 sock = socket.socket(family=socket.AF_INET, type=socket.SOCK_STREAM)
 sock.setblocking(True)
 
 class MyCompleter(Completer):
     def get_completions(self, document, complete_event):
-        words = ['/help','/say','/list','/setname','/exit','/connect','/disconnect'] #添加以/开头的命令
+        words = ['/help','/say','/list','/listchan','/enter','/esc','/setname','/exit','/connect','/disconnect','/default'] #添加以/开头的命令
         word_before_cursor = document.get_word_before_cursor(WORD=True)
         for word in words:
             if word.startswith(word_before_cursor):
@@ -33,7 +34,7 @@ class mainclient(object):
         global sock
         while True:
             try:
-                data = sock.recv(2048).decode("utf-8")
+                data = sock.recv(512).decode("utf-8")
                 if data == '':
                     printf("Disconnect from server")
                     self.recvth = Thread(target=self.recvthread,daemon=True)
@@ -76,14 +77,33 @@ class mainclient(object):
                 elif data["t"] == "305":
                     printf("Banned from server")
 
+                elif data["t"] == "306":
+                    pass
+
+                elif data["t"] == "307":
+                    printf("You are not on the channel")
+
+                elif data["t"] == "308":
+                    printf("You already in this channel")
+
+                elif data["t"] == "309":
+                    printf("Channel not found")
+
+                elif data["t"] == "310":
+                    printf("Permission denied, You can't access this channel")
+
                 elif data["t"] == "400":
-                    printf("<" + data["u"] + ">" + data["m"])
+                    printf("["+data["c"]+"]" + "<" + data["u"] + ">" + data["m"])
 
                 elif data["t"] == "401":
-                    printf("[Server]" + data["m"])
+                    printf("["+data["c"]+"]" + "[Server]" + data["m"])
 
                 elif data["t"] == "410":
-                    text = "online:" + data["l"]
+                    text = "["+data["c"]+"]"+"online:" + data["l"]
+                    printf(text)
+
+                elif data["t"] == "411":
+                    text = "channels:" + data["l"]
                     printf(text)
 
             except json.decoder.JSONDecodeError:
@@ -100,13 +120,13 @@ class mainclient(object):
                 continue
 
     def cli(self):
-        global sock
+        global sock, default_chan
         commands = MyCompleter()
         history = InMemoryHistory()
         helpitem = "{0:<25}\t{1:<25}\t{2:<25}"
         printf("Welcome to Lspy-Chat Beta")
         printf("Type \'/help\' to get help")
-        printf("Made on 2023/12/02 by Win11inVMware")
+        printf("Made on 2024/01/03 by Win11inVMware")
         while True:
             try:
                 get = prompt('>',completer=commands,history=history,complete_style=CompleteStyle.READLINE_LIKE,auto_suggest=False)
@@ -135,16 +155,20 @@ class mainclient(object):
                     if args[0] == '/help':
                         printf(helpitem.format("command:","usage:","comment:"))
                         printf(helpitem.format("help","/help","Print command help"))
-                        printf(helpitem.format("say","/say <text>","Send message to server"))
+                        printf(helpitem.format("say","/say <chan> <text>","Send message to channel"))
                         printf(helpitem.format("setname","/setname <username>","Set your name"))
-                        printf(helpitem.format("list","/list","Print online user"))
+                        printf(helpitem.format("list","/list <chan>","Print online user in the channel"))
+                        printf(helpitem.format("listchan","/listchan","Print channels"))
+                        printf(helpitem.format("enter","/enter <chan>","Enter in a channel"))
+                        printf(helpitem.format("esc","/esc <chan>","Escape the channel"))
+                        printf(helpitem.format("default","/default","Set the default channel (not to use /say)"))
                         printf(helpitem.format("connect","/connect <ip>:<port>","Connect to server"))
                         printf(helpitem.format("disconnect","/disconnect","Disconnect from server"))
                         printf(helpitem.format("exit","/exit","Exit from this program"))
 
                     elif args[0] == '/say':
                         if connserver():
-                            self.sendmsg(get[5:])
+                            self.sendmsg(get[6+len(args[1]):], args[1])
                         else:
                             printf("say:Not connected to server")
                     
@@ -157,10 +181,17 @@ class mainclient(object):
                                 
                     elif args[0] == '/list':
                         if connserver():
-                            text = "{\"t\":\"202\"}"
+                            text = "{\"t\":\"202\", \"c\": \"" + args[1] + "\"}"
                             self.sendata(text)
                         else:
                             printf("list:Not connected to server")
+
+                    elif args[0] == '/listchan':
+                        if connserver():
+                            text = "{\"t\":\"203\"}"
+                            self.sendata(text)
+                        else:
+                            printf("listchan:Not connected to server")
 
                     elif args[0] == '/connect':
                         if connserver():
@@ -184,6 +215,23 @@ class mainclient(object):
                         else:
                             printf("disconnect:Not connected to server")
 
+                    elif args[0] == '/enter':
+                        if connserver():
+                            text = "{\"t\":\"204\", \"c\":\"" + args[1] + "\"}"
+                            self.sendata(text)
+                        else:
+                            printf("enter:Not connected to server")
+
+                    elif args[0] == '/esc':
+                        if connserver():
+                            text = "{\"t\":\"205\", \"c\":\"" + args[1] + "\"}"
+                            self.sendata(text)
+                        else:
+                            printf("esc:Not connected to server")
+
+                    elif args[0] == '/default':
+                        default_chan = args[1]
+
                     elif args[0] == '/exit':
                         printf("bye")
                         os._exit(0)
@@ -196,15 +244,15 @@ class mainclient(object):
 
             else:
                 if connserver():
-                    self.sendmsg(get)
+                    self.sendmsg(get, default_chan)
                 else:
                     printf("say:Not connected to server")
 
     def sendata(self,msg):
         sock.send(str(msg).encode('utf-8'))
     
-    def sendmsg(self,msg):
-        text = "{\"t\":\"201\", \"m\":\"" + msg + "\"}"
+    def sendmsg(self,msg,chan):
+        text = "{\"t\":\"201\", \"m\":\"" + msg + "\", \"c\": \"" + chan + "\"}"
         self.sendata(text)
 
 def connserver():

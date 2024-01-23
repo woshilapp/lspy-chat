@@ -1,0 +1,59 @@
+[INFO][2024-01-22 17:29:29]Listen on 127.0.0.1:6999
+[INFO][2024-01-22 17:29:29]Server Started
+
+[INFO][2024-01-23 00:28:03]Listen on 127.0.0.1:6999
+[INFO][2024-01-23 00:28:03]Server Started
+[INFO][2024-01-23 00:28:14]Connect to 127.0.0.1:57726
+[INFO][2024-01-23 00:28:15]127.0.0.1:57726 set name: a
+[INFO][2024-01-23 00:28:21]a enter to chan: a
+[INFO][2024-01-23 00:29:03]Disconnect from 127.0.0.1:57726
+[INFO][2024-01-23 00:29:55]Connect to 127.0.0.1:46398
+[INFO][2024-01-23 00:29:56]127.0.0.1:46398 set name: 1
+[INFO][2024-01-23 00:29:59]1 enter to chan: a
+[INFO][2024-01-23 00:31:36]Disconnect from 127.0.0.1:46398
+[INFO][2024-01-23 00:37:36]Connect to 127.0.0.1:50624
+[INFO][2024-01-23 00:37:37]127.0.0.1:50624 set name: a
+[INFO][2024-01-23 00:37:39]a enter to chan: a
+[INFO][2024-01-23 00:39:04]Disconnect from 127.0.0.1:50624
+[INFO][2024-01-23 00:40:31]Connect to 127.0.0.1:35982
+[INFO][2024-01-23 00:40:32]127.0.0.1:35982 set name: a
+[INFO][2024-01-23 00:40:34]a enter to chan: a
+[INFO][2024-01-23 00:41:25]a exit from chan: a
+[INFO][2024-01-23 00:42:12]Disconnect from 127.0.0.1:35982
+[INFO][2024-01-23 00:44:01]Connect to 127.0.0.1:41090
+[INFO][2024-01-23 00:44:02]127.0.0.1:41090 set name: a
+[INFO][2024-01-23 00:44:04]a enter to chan: a
+[WARNING][2024-01-23 00:44:07]127.0.0.1:41090 sent a badpacket
+[WARNING][2024-01-23 00:44:08]127.0.0.1:41090 sent a badpacket
+[WARNING][2024-01-23 00:44:08]127.0.0.1:41090 sent a badpacket
+[WARNING][2024-01-23 00:44:08]127.0.0.1:41090 sent a badpacket
+[INFO][2024-01-23 00:44:17]Disconnect from 127.0.0.1:41090
+[INFO][2024-01-23 00:45:19]Connect to 127.0.0.1:52702
+[INFO][2024-01-23 00:45:23]127.0.0.1:52702 set name: nmsl
+[INFO][2024-01-23 00:45:24]nmsl enter to chan: a
+[INFO][2024-01-23 00:45:39]Recv from nmsl: dku to chan: a
+[INFO][2024-01-23 00:45:59]Disconnect from 127.0.0.1:52702
+[INFO][2024-01-23 00:46:03]Connect to 127.0.0.1:52606
+[INFO][2024-01-23 00:46:04]127.0.0.1:52606 set name: a
+[INFO][2024-01-23 00:46:06]a enter to chan: a
+[INFO][2024-01-23 00:46:19]Disconnect from 127.0.0.1:52606
+[INFO][2024-01-23 00:47:18]Connect to 127.0.0.1:47666
+[INFO][2024-01-23 00:47:19]127.0.0.1:47666 set name: asdasd
+[INFO][2024-01-23 00:47:21]asdasd enter to chan: a
+[INFO][2024-01-23 00:47:28]Recv from asdasd: asd to chan: a
+[INFO][2024-01-23 00:47:28]Recv from asdasd: sa to chan: a
+[INFO][2024-01-23 00:47:28]Recv from asdasd: d to chan: a
+[INFO][2024-01-23 00:47:28]Recv from asdasd: as to chan: a
+[INFO][2024-01-23 00:47:28]Recv from asdasd: s to chan: a
+[INFO][2024-01-23 00:47:32]Recv from asdasd: finally to chan: a
+[INFO][2024-01-23 00:47:33]Recv from asdasd: dku to chan: a
+[INFO][2024-01-23 00:47:36]Recv from asdasd: 你妈死了 to chan: a
+[INFO][2024-01-23 00:47:50]Connect to 127.0.0.1:34278
+[INFO][2024-01-23 00:47:51]127.0.0.1:34278 set name: aaa
+[INFO][2024-01-23 00:47:53]aaa enter to chan: a
+[INFO][2024-01-23 00:47:59]Recv from aaa: mulit test to chan: a
+[INFO][2024-01-23 00:48:05]Recv from aaa: 多人测试 to chan: a
+[INFO][2024-01-23 00:48:07]Recv from aaa: 66 to chan: a
+[INFO][2024-01-23 00:48:09]Recv from aaa: 可以了 to chan: a
+[INFO][2024-01-23 00:48:17]Disconnect from 127.0.0.1:34278
+[INFO][2024-01-23 00:48:27]Disconnect from 127.0.0.1:47666
