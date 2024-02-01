@@ -218,6 +218,22 @@ def p205(conn, data): #client exit chan
 
     logger.info(online[conn]+" exit from chan: "+data["c"])
 
+@badpacket_warn(callback)
+def p206(conn, data): #client get records
+    if conn not in online.keys():
+        conn.send("{\"t\":\"303\"}".encode('utf-8'))
+        return 0
+
+    if not cm.have_chan(data["c"]):
+        conn.send("{\"t\":\"309\"}".encode('utf-8'))
+        return 0
+
+    if online[conn] not in cm.chand[data["c"]]:
+        conn.send("{\"t\":\"307\"}".encode('utf-8'))
+        return 0
+
+    conn.send()#{"c":data["c"], "t":rm.get_text(data["c"])}
+
 # init_event
 em.reg_event("0", p0)
 em.reg_event("200", p200)
@@ -226,6 +242,7 @@ em.reg_event("202", p202)
 em.reg_event("203", p203)
 em.reg_event("204", p204)
 em.reg_event("205", p205)
+em.reg_event("206", p206)
 
 def accept_thread():
     while exitt:
