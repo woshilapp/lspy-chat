@@ -1,9 +1,9 @@
 #lspy-chat server test by Python 3.12.1
-#finish 0.3 2024/01/03
 #0.4 use the new proctrol
 import socket,json,threading,logging,time,yaml,re
 from prompt_toolkit import prompt,print_formatted_text as printf
 from prompt_toolkit.history import InMemoryHistory
+# from ..proctrol import *
 from src import *
 
 class myconhandler(logging.StreamHandler): #重写StreamHandler实现切换输出函数的功能
@@ -30,20 +30,23 @@ logger = logging.getLogger(__name__) #日志模块，输出文件为'server.log'
 
 #do files
 with open('./data/server.log', 'a') as file:
-    if file.tell() != 0: #if null, dont do it
+    if file.tell() != 0: #if null, don't do it
         file.write('\n')
 
-with open("./config.yaml","r") as f: #读取配置文件
+with open("./config.yaml","r") as f: #read config
     global ip,port
-    a = yaml.load(f.read(), Loader=yaml.FullLoader)["network"]
-    ip = a["ip"]
-    port = a["port"]
+    cfgtext = f.read()
+    net = yaml.load(cfgtext, Loader=yaml.FullLoader)["network"]
+    recd = yaml.load(cfgtext, Loader=yaml.FullLoader)["records"]
+    ip = net["ip"]
+    port = net["port"]
+    enrd = recd["enable"]
 
 with open("./data/ban.json", "r") as f: #ban list(ip:[], id:[])
     global ban
     ban = json.loads(f.read())
 
-sock = socket.socket(family=socket.AF_INET,type=socket.SOCK_STREAM) #套接字的初始化
+sock = socket.socket(family=socket.AF_INET,type=socket.SOCK_STREAM) #init server socket
 try:
     sock.bind((ip, port))
 except OSError:
@@ -53,12 +56,13 @@ sock.settimeout(3)
 sock.setblocking(False)
 sock.listen(10)
 
-logger.info("Listen on "+ip+":"+str(port))
+logger.info("Listen on " + ip + ":" + str(port))
 
 slt = 0.000001 #const of sleep
 connlist = {} #connection list(sock:bool) bool is run able
 online = BidirectionalDict() #online user(sock:name)
 connaddr = BidirectionalDict() #socket address(sock:addr)
+rm = RecordsManager(enrd) #records manager
 em = EventManager() #event manager
 cm = ChanManager() #channel manager
 exitt = True #broadcast exit signal
@@ -73,7 +77,7 @@ em.set_callback(callback)
 #     for i in d.keys():
 #         if d[i] == v:
 #             return i
-    
+#      
 #     return False           we needn't it because BidirectionalDict
 
 def kick(name):
@@ -306,7 +310,7 @@ def recv_thread(conn):
         logger.debug(str(type(e))+" "+str(e))
 
 def cli():
-    global exitt, ban
+    global exitt,ban
 
     history = InMemoryHistory()
 

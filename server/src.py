@@ -183,3 +183,35 @@ class ChanManager:
         self.chanf.write(json.dumps(self.perd, indent=4))
         self.chanf.close()
         # print("destcurt")
+
+class RecordsManager():
+    def __init__(self, enable):
+        self.records = {} #name:text(record)
+        self.enable = enable
+
+    def get_text(self, name):
+        if self.enable:
+            if name not in self.records.keys():
+                return
+            
+            return self.records[name]
+
+        return ""
+
+    def append_text(self, name, text):
+        if self.enable:
+            if name not in self.records.keys():
+                self.records[name] = ""
+
+            self.records[name] += text
+
+        return ""
+
+    def clean_text(self, name):
+        if self.enable:
+            if name not in self.records.keys():
+                return
+            
+            self.records[name] = ""
+
+        return ""
