@@ -428,6 +428,9 @@ def cli():
                 if args[2] == "del":
                     cm.remove_perm(args[3], args[1])
 
+            elif args[0] == "rdclean": #rdclean %channel%
+                rm.clean_text(args[1])
+
             # elif args[0] == "eval":
             #     eval(args[1])
         
