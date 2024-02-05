@@ -48,3 +48,5 @@ for i in range(len(dict1.keys())):
 
 print(dict1)
 print(stre)
+
+print("hello"[:-1])

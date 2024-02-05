@@ -1,9 +1,8 @@
 #lspy-chat server test by Python 3.12.1
-#0.4 use the new proctrol
+#0.4 fixed the procotol
 import socket,json,threading,logging,time,yaml,re
 from prompt_toolkit import prompt,print_formatted_text as printf
 from prompt_toolkit.history import InMemoryHistory
-# from ..proctrol import *
 from src import *
 
 class myconhandler(logging.StreamHandler): #重写StreamHandler实现切换输出函数的功能
@@ -94,6 +93,62 @@ def kickip(ipaddr):
     connaddr[ipaddr].send("{\"t\":\"304\"}".encode('utf-8'))
     connaddr[ipaddr].close()
 
+def ban(id):
+    if id in ban["id"]:
+        logger.info(id + " already banned")
+    else:
+        if id in online.values():
+            online[id].send("{\"t\":\"305\"}".encode('utf-8'))
+            online[id].close()
+
+        ban["id"].append(id)
+
+        logger.info(id + " banned from server")
+
+def unban(id):
+    if id not in ban["id"]:
+        logger.info(id + " not banned")
+    else:
+        ban["id"].remove(id)
+        logger.info(id + " unbanned from server")
+
+def banip(ip):
+    if ip in ban["ip"]:
+        logger.info(ip + " already banned")
+    else:
+        for addr in connaddr.values():
+            if ip in addr:
+                connaddr[addr].send("{\"t\":\"305\"}".encode('utf-8'))
+                connaddr[addr].close()
+
+        ban["ip"].append(ip)
+
+        logger.info(ip + " banned from server")
+
+def unbanip(ip):
+    if ip not in ban["ip"]:
+        logger.info(ip + " not banned")
+    else:
+        ban["ip"].remove(ip)
+        logger.info(ip + " unbanned from server")
+
+def server_msg(chan, text):
+    ttext = "{\"t\":\"401\", \"m\":\"" + text + "\", \"c\": \"" + chan + "\"}"
+
+    if chan == "*":
+        for conn in online.keys():
+            if type(conn) == str:
+                continue
+            else:
+                conn.send(ttext.encode('utf-8'))
+        logger.info("Recv from [Server]: " + text + " to chan: *")
+        
+    else:
+        for u in cm.chand[chan]:
+            online[u].send(text.encode('utf-8'))
+        logger.info("Recv from [Server]: " + text + " to chan: " + chan)
+        rm.append_text(chan, text) #record
+
 @badpacket_warn(callback)
 def p0(conn, data):
     pass
@@ -131,6 +186,7 @@ def p201(conn, data): #client msg
         for u in cm.chand[data["c"]]:
             online[u].send(text.encode('utf-8'))
         logger.info("Recv from "+online[conn]+": "+data["m"]+" to chan: "+data["c"])
+        rm.append_text(data["c"], "<"+online[conn]+">"+data["m"])
 
 @badpacket_warn(callback)
 def p202(conn, data): #client get online
@@ -188,12 +244,7 @@ def p204(conn, data): #client join chan
 
     conn.send("{\"t\":\"306\"}".encode('utf-8'))
 
-    text = "{\"t\":\"401\", \"m\":\"" + online[conn] + " Joined the channel\", \"c\": \"" + data["c"] + "\"}"
-
-    for u in cm.chand[data["c"]]:
-        online[u].send(text.encode('utf-8'))
-
-    logger.info(online[conn]+" enter to chan: "+data["c"])
+    server_msg(data["c"], online[conn] + " Joined the channel")
 
 @badpacket_warn(callback)
 def p205(conn, data): #client exit chan
@@ -211,12 +262,7 @@ def p205(conn, data): #client exit chan
 
     cm.remove_from_chan(data["c"], online[conn])
 
-    text = "{\"t\":\"401\", \"m\":\"" + online[conn] + " Exited the channel\", \"c\": \"" + data["c"] + "\"}"
-
-    for u in cm.chand[data["c"]]:
-        online[u].send(text.encode('utf-8'))
-
-    logger.info(online[conn]+" exit from chan: "+data["c"])
+    server_msg(data["c"], online[conn] + " Exited the channel")
 
 @badpacket_warn(callback)
 def p206(conn, data): #client get records
@@ -232,7 +278,7 @@ def p206(conn, data): #client get records
         conn.send("{\"t\":\"307\"}".encode('utf-8'))
         return 0
 
-    conn.send()#{"c":data["c"], "t":rm.get_text(data["c"])}
+    conn.send("{\"t\": \"420\", \"c\": " + data["c"] + ", \"m\": " + rm.get_text(data["c"])[:-1] + "}".encode("utf-8"))
 
 # init_event
 em.reg_event("0", p0)
@@ -286,10 +332,7 @@ def clear_thread():
                         if online[conn] in cm.chand[chan]:
                             cm.remove_from_chan(chan, online[conn])
 
-                            text = "{\"t\":\"401\", \"m\":\"" + online[conn] + " Exited the channel\", \"c\": \"" + chan + "\"}"
-
-                            for u in cm.chand[chan]: #broadcast
-                                online[u].send(text.encode('utf-8'))
+                            server_msg(chan, online[conn] + " Exited the channel")
                     
                     online.del_pair(conn)
                     
@@ -346,26 +389,23 @@ def cli():
         try:
             if args[0] == "exit":
                 f = open("./data/ban.json", "w")
-                f.write(json.dumps(ban, indent=4))
+                f.write(json.dumps(ban, indent=4, ensure_ascii=False))
                 f.flush()   # wtf
                 f.close()
                 cm.__del__()
                 exitt = False
 
             if args[0] == "saya":
-                text = "{\"t\":\"401\", \"m\":\"" + input_text[5:] + "\", \"c\": \"*\"}"
-                for conn in online.keys():
-                    if type(conn) == str:
-                        continue
-                    else:
-                        conn.send(text.encode('utf-8'))
-                logger.info("Recv from [Server]: " + input_text[5:] + " to chan: *")
+                intext = input_text[5:]
+                intext.replace("\\", "\\\\")
+
+                server_msg("*", intext)
 
             elif args[0] == "say":
-                text = "{\"t\":\"401\", \"m\":\"" + input_text[5+len(args[1]):] + "\", \"c\": \"" + args[1] + "\"}"
-                for u in cm.chand[args[1]]:
-                    online[u].send(text.encode('utf-8'))
-                logger.info("Recv from [Server]: " + input_text[5+len(args[1]):] + " to chan: " + args[1])
+                intext = input_text[5+len(args[1]):]
+                intext.replace("\\", "\\\\")
+                
+                server_msg(args[1], intext)
 
             elif args[0] == "kick":
                 kick(args[1])
