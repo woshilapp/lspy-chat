@@ -93,7 +93,7 @@ def kickip(ipaddr):
     connaddr[ipaddr].send("{\"t\":\"304\"}".encode('utf-8'))
     connaddr[ipaddr].close()
 
-def ban(id):
+def banid(id):
     if id in ban["id"]:
         logger.info(id + " already banned")
     else:
@@ -105,7 +105,7 @@ def ban(id):
 
         logger.info(id + " banned from server")
 
-def unban(id):
+def unbanid(id):
     if id not in ban["id"]:
         logger.info(id + " not banned")
     else:
@@ -145,9 +145,9 @@ def server_msg(chan, text):
         
     else:
         for u in cm.chand[chan]:
-            online[u].send(text.encode('utf-8'))
+            online[u].send(ttext.encode('utf-8'))
         logger.info("Recv from [Server]: " + text + " to chan: " + chan)
-        rm.append_text(chan, text) #record
+        rm.append_text(chan, "[Server]" + text) #record
 
 @badpacket_warn(callback)
 def p0(conn, data):
@@ -278,7 +278,9 @@ def p206(conn, data): #client get records
         conn.send("{\"t\":\"307\"}".encode('utf-8'))
         return 0
 
-    conn.send("{\"t\": \"420\", \"c\": " + data["c"] + ", \"m\": " + rm.get_text(data["c"])[:-1] + "}".encode("utf-8"))
+    text = "{\"t\": \"420\", \"c\": \"" + data["c"] + "\", \"m\": \"" + rm.get_text(data["c"])[:-1] + "\"}"
+
+    conn.send(text.encode("utf-8"))
 
 # init_event
 em.reg_event("0", p0)
@@ -414,43 +416,16 @@ def cli():
                 kickip(args[1])
 
             elif args[0] == "ban":
-                if args[1] in ban["id"]:
-                    logger.info(args[1] + " already banned")
-                else:
-                    if args[1] in online.values():
-                        online[args[1]].send("{\"t\":\"305\"}".encode('utf-8'))
-                        online[args[1]].close()
-
-                    ban["id"].append(args[1])
-
-                    logger.info(args[1] + " banned from server")
+                banid(args[1])
 
             elif args[0] == "unban":
-                if args[1] not in ban["id"]:
-                    logger.info(args[1] + " not banned")
-                else:
-                    ban["id"].remove(args[1])
-                    logger.info(args[1] + " unbanned from server")
+                unbanid(args[1])
 
             elif args[0] == "banip":
-                if args[1] in ban["ip"]:
-                    logger.info(args[1] + " already banned")
-                else:
-                    for addr in connaddr.values():
-                        if args[1] in addr:
-                            connaddr[addr].send("{\"t\":\"305\"}".encode('utf-8'))
-                            connaddr[addr].close()
-
-                    ban["ip"].append(args[1])
-
-                    logger.info(args[1] + " banned from server")
+                banip(args[1])
 
             elif args[0] == "unbanip":
-                if args[1] not in ban["ip"]:
-                    logger.info(args[1] + " not banned")
-                else:
-                    ban["ip"].remove(args[1])
-                    logger.info(args[1] + " unbanned from server")
+                unbanip(args[1])
 
             elif args[0] == "list":
                 printf(str(cm.chand[args[1]]))

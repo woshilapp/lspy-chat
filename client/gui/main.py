@@ -190,7 +190,7 @@ def recvthread():
     global sock, recvth, channels
     while True:
         try:
-            data = sock.recv(512).decode("utf-8")
+            data = sock.recv(1024).decode("utf-8")
             if data == '':
                 change_onli("")
                 recvth = Thread(target=recvthread,daemon=True)
@@ -266,7 +266,7 @@ def procthread():
                     init_chan(data["c"])
                     chan_listbox.insert("end", data["c"])
                     chan_listbox.select_set(0)
-                    sendata("{\"t\": \"206\"}")
+                    sendata("{\"t\": \"206\", \"c\": \"" + data["c"] + "\"}")
 
                 channels[data["c"]][0] += "<" + data["u"] + ">" + data["m"] + "\n"
 
@@ -279,7 +279,7 @@ def procthread():
                     init_chan(data["c"])
                     chan_listbox.insert("end", data["c"])
                     chan_listbox.select_set(0)
-                    sendata("{\"t\": \"206\"}")
+                    sendata("{\"t\": \"206\", \"c\": \"" + data["c"] + "\"}")
 
                 channels[data["c"]][0] += "[Server]" + data["m"] + "\n"
                 sendata("{\"t\": \"202\", \"c\": \"" + data["c"] + "\"}") #because new user will recv it
@@ -302,7 +302,7 @@ def procthread():
                 chan_selbox1.current(0)
 
             elif data["t"] == "420":
-                channels[data["c"]][0] = data["m"]
+                channels[data["c"]][0] = data["m"] + "\n"
 
                 change_textbox(channels[chan_listbox.get(chan_listbox.curselection()[0])][0])
 

@@ -1,2 +1,259 @@
 [INFO][2024-02-01 16:25:58]Listen on 127.0.0.1:6999
 [INFO][2024-02-01 16:25:58]Server Started
+
+[INFO][2024-02-06 10:38:14]Listen on 127.0.0.1:6999
+[INFO][2024-02-06 10:38:14]Server Started
+[ERROR][2024-02-06 10:38:35]Uncaught error: 'function' object is not subscriptable
+
+[INFO][2024-02-06 10:41:43]Listen on 127.0.0.1:6999
+[INFO][2024-02-06 10:41:43]Server Started
+
+[INFO][2024-02-06 10:42:11]Listen on 127.0.0.1:6999
+[INFO][2024-02-06 10:42:11]Server Started
+[ERROR][2024-02-06 10:42:26]Uncaught error: 'function' object is not subscriptable
+
+[INFO][2024-02-06 10:44:07]Listen on 127.0.0.1:6999
+[INFO][2024-02-06 10:44:07]Server Started
+
+[INFO][2024-02-06 10:46:43]Listen on 127.0.0.1:6999
+[INFO][2024-02-06 10:46:43]Server Started
+[INFO][2024-02-06 10:46:54]Connect to 127.0.0.1:45498
+[INFO][2024-02-06 10:46:56]127.0.0.1:45498 set name: asdasd
+[INFO][2024-02-06 10:46:59]Recv from [Server]: asdasd Joined the channel to chan: a
+
+[ERROR][2024-02-06 10:47:46]The port or address already use
+[INFO][2024-02-06 10:47:46]Listen on 127.0.0.1:6999
+[INFO][2024-02-06 10:47:46]Server Started
+
+[ERROR][2024-02-06 10:48:13]The port or address already use
+[INFO][2024-02-06 10:48:13]Listen on 127.0.0.1:6999
+[INFO][2024-02-06 10:48:13]Server Started
+
+[INFO][2024-02-06 10:53:49]Listen on 127.0.0.1:6999
+[INFO][2024-02-06 10:53:49]Server Started
+[INFO][2024-02-06 10:53:51]Connect to 127.0.0.1:58016
+[INFO][2024-02-06 10:53:52]127.0.0.1:58016 set name: asd
+[INFO][2024-02-06 10:53:54]Recv from [Server]: asd Joined the channel to chan: a
+
+[INFO][2024-02-06 10:54:33]Listen on 127.0.0.1:6999
+[INFO][2024-02-06 10:54:33]Server Started
+[INFO][2024-02-06 10:54:42]Connect to 127.0.0.1:42236
+[INFO][2024-02-06 10:54:43]127.0.0.1:42236 set name: asd
+[INFO][2024-02-06 10:54:44]Recv from [Server]: asd Joined the channel to chan: a
+[WARNING][2024-02-06 10:54:44]127.0.0.1:42236 sent a badpacket
+[INFO][2024-02-06 10:54:51]Recv from asd: 6 to chan: a
+[INFO][2024-02-06 10:54:51]Recv from asd: 6 to chan: a
+[INFO][2024-02-06 10:54:51]Recv from asd: 6 to chan: a
+[INFO][2024-02-06 10:54:51]Recv from asd: 6 to chan: a
+[INFO][2024-02-06 10:54:51]Recv from asd: 6 to chan: a
+[INFO][2024-02-06 10:54:52]Recv from asd: 6 to chan: a
+[INFO][2024-02-06 10:54:52]Recv from asd: da to chan: a
+[INFO][2024-02-06 10:54:52]Recv from asd: sd to chan: a
+[INFO][2024-02-06 10:54:52]Recv from asd: as to chan: a
+[INFO][2024-02-06 10:54:52]Recv from asd: d to chan: a
+[INFO][2024-02-06 10:54:53]Recv from asd: asad to chan: a
+[INFO][2024-02-06 10:54:55]Recv from asd: nmsl666 to chan: a
+[INFO][2024-02-06 10:55:07]Connect to 127.0.0.1:38194
+[INFO][2024-02-06 10:55:09]127.0.0.1:38194 set name: asdasd
+[INFO][2024-02-06 10:55:11]Recv from [Server]: asdasd Joined the channel to chan: a
+[WARNING][2024-02-06 10:55:11]127.0.0.1:38194 sent a badpacket
+[INFO][2024-02-06 10:55:19]Recv from asd: ??? to chan: a
+[INFO][2024-02-06 10:55:20]Recv from asd: nmsl to chan: a
+[INFO][2024-02-06 10:55:22]Recv from asd: cwnmd to chan: a
+
+[INFO][2024-02-06 10:57:25]Listen on 127.0.0.1:6999
+[INFO][2024-02-06 10:57:25]Server Started
+[INFO][2024-02-06 10:57:38]Connect to 127.0.0.1:56912
+[INFO][2024-02-06 10:57:39]127.0.0.1:56912 set name: asd
+[INFO][2024-02-06 10:57:40]Recv from [Server]: asd Joined the channel to chan: a
+[WARNING][2024-02-06 10:57:40]127.0.0.1:56912 sent a badpacket
+[INFO][2024-02-06 10:57:49]Connect to 127.0.0.1:50564
+[INFO][2024-02-06 10:57:50]127.0.0.1:50564 set name: asdasd
+[INFO][2024-02-06 10:57:52]Recv from [Server]: asdasd Joined the channel to chan: a
+[WARNING][2024-02-06 10:57:52]127.0.0.1:50564 sent a badpacket
+[INFO][2024-02-06 10:58:00]Recv from asdasd: 66 to chan: a
+[INFO][2024-02-06 10:58:00]Recv from asdasd: 6 to chan: a
+[INFO][2024-02-06 10:58:00]Recv from asdasd: 6 to chan: a
+[INFO][2024-02-06 10:58:00]Recv from asdasd: 6 to chan: a
+[INFO][2024-02-06 10:58:00]Recv from asdasd: 6 to chan: a
+[INFO][2024-02-06 10:58:01]Recv from asdasd: 6 to chan: a
+[INFO][2024-02-06 10:58:01]Recv from asdasd: 6 to chan: a
+[INFO][2024-02-06 10:58:01]Recv from asdasd: 6 to chan: a
+[INFO][2024-02-06 10:58:01]Recv from asdasd: 6 to chan: a
+[INFO][2024-02-06 10:58:01]Recv from asdasd: 6 to chan: a
+[INFO][2024-02-06 10:58:05]Recv from [Server]: asdasd Exited the channel to chan: a
+[INFO][2024-02-06 10:58:06]Recv from [Server]: asdasd Joined the channel to chan: a
+[WARNING][2024-02-06 10:58:06]127.0.0.1:50564 sent a badpacket
+
+[ERROR][2024-02-06 11:00:01]The port or address already use
+[INFO][2024-02-06 11:00:01]Listen on 127.0.0.1:6999
+[INFO][2024-02-06 11:00:01]Server Started
+
+[INFO][2024-02-06 11:00:35]Listen on 127.0.0.1:6999
+[INFO][2024-02-06 11:00:35]Server Started
+[INFO][2024-02-06 11:00:39]Connect to 127.0.0.1:44914
+[INFO][2024-02-06 11:00:42]127.0.0.1:44914 set name: asdsa
+[INFO][2024-02-06 11:00:43]Recv from [Server]: asdsa Joined the channel to chan: a
+[WARNING][2024-02-06 11:00:43]127.0.0.1:44914 sent a badpacket
+
+[ERROR][2024-02-06 11:04:21]The port or address already use
+[INFO][2024-02-06 11:04:21]Listen on 127.0.0.1:6999
+[INFO][2024-02-06 11:04:21]Server Started
+
+[INFO][2024-02-06 11:05:52]Listen on 127.0.0.1:6999
+[INFO][2024-02-06 11:05:52]Server Started
+[INFO][2024-02-06 11:06:02]Connect to 127.0.0.1:57742
+[INFO][2024-02-06 11:06:04]127.0.0.1:57742 set name: asd
+[INFO][2024-02-06 11:06:06]Recv from [Server]: asd Joined the channel to chan: a
+[INFO][2024-02-06 11:06:35]Recv from asd: sda to chan: a
+[INFO][2024-02-06 11:06:35]Recv from asd: dsa to chan: a
+[INFO][2024-02-06 11:06:36]Recv from asd: s to chan: a
+[INFO][2024-02-06 11:06:36]Recv from asd: das to chan: a
+[INFO][2024-02-06 11:06:36]Recv from asd: sa to chan: a
+[INFO][2024-02-06 11:06:36]Recv from asd: sa to chan: a
+[INFO][2024-02-06 11:06:37]Recv from asd: asa to chan: a
+[INFO][2024-02-06 11:06:37]Recv from asd: sdas to chan: a
+[INFO][2024-02-06 11:06:37]Recv from asd: a to chan: a
+[INFO][2024-02-06 11:06:37]Recv from asd: sd to chan: a
+[INFO][2024-02-06 11:06:38]Recv from asd: ads to chan: a
+[INFO][2024-02-06 11:06:38]Recv from asd: asd to chan: a
+[INFO][2024-02-06 11:06:38]Recv from asd: sad to chan: a
+[INFO][2024-02-06 11:06:38]Recv from asd: as to chan: a
+[INFO][2024-02-06 11:06:39]Recv from asd: as to chan: a
+[INFO][2024-02-06 11:06:39]Recv from asd: dassa to chan: a
+[INFO][2024-02-06 11:06:39]Recv from asd: ds to chan: a
+[INFO][2024-02-06 11:06:39]Recv from asd: as to chan: a
+[INFO][2024-02-06 11:06:40]Recv from asd: ad to chan: a
+[INFO][2024-02-06 11:06:40]Recv from asd: a to chan: a
+[INFO][2024-02-06 11:06:40]Recv from asd: a to chan: a
+[INFO][2024-02-06 11:06:40]Recv from asd: as to chan: a
+[INFO][2024-02-06 11:06:40]Recv from asd: as to chan: a
+[INFO][2024-02-06 11:06:41]Recv from asd: asa to chan: a
+[INFO][2024-02-06 11:06:41]Recv from asd: a to chan: a
+[INFO][2024-02-06 11:06:41]Recv from asd: a to chan: a
+[INFO][2024-02-06 11:06:42]Recv from asd: a to chan: a
+[INFO][2024-02-06 11:06:42]Recv from asd: a to chan: a
+[INFO][2024-02-06 11:06:42]Recv from asd: a to chan: a
+[INFO][2024-02-06 11:06:42]Recv from asd: a to chan: a
+[INFO][2024-02-06 11:06:42]Recv from asd: a to chan: a
+[INFO][2024-02-06 11:06:44]Recv from [Server]: asd Exited the channel to chan: a
+[INFO][2024-02-06 11:06:46]Recv from [Server]: asd Joined the channel to chan: a
+
+[INFO][2024-02-06 11:08:39]Listen on 127.0.0.1:6999
+[INFO][2024-02-06 11:08:39]Server Started
+[INFO][2024-02-06 11:08:47]Connect to 127.0.0.1:59960
+[INFO][2024-02-06 11:08:49]127.0.0.1:59960 set name: adsf
+[INFO][2024-02-06 11:08:51]Recv from [Server]: adsf Joined the channel to chan: a
+[INFO][2024-02-06 11:08:54]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:08:55]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:08:55]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:08:55]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:08:55]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:08:55]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:08:56]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:08:56]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:08:56]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:08:56]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:08:56]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:08:57]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:08:57]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:08:57]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:08:57]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:08:57]Recv from adsf: 66 to chan: a
+[INFO][2024-02-06 11:08:58]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:08:58]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:08:58]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:08:58]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:08:58]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:08:59]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:08:59]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:08:59]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:08:59]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:09:01]Recv from adsf: sb to chan: a
+[INFO][2024-02-06 11:09:01]Recv from adsf: s to chan: a
+[INFO][2024-02-06 11:09:02]Recv from adsf: bs to chan: a
+[INFO][2024-02-06 11:09:02]Recv from adsf: bs to chan: a
+[INFO][2024-02-06 11:09:02]Recv from adsf: bsb to chan: a
+[INFO][2024-02-06 11:09:03]Recv from adsf: sb to chan: a
+[INFO][2024-02-06 11:09:04]Recv from adsf: sb to chan: a
+[INFO][2024-02-06 11:09:04]Recv from adsf: sb to chan: a
+[INFO][2024-02-06 11:09:05]Recv from adsf: sb to chan: a
+[INFO][2024-02-06 11:09:05]Recv from adsf: b to chan: a
+[INFO][2024-02-06 11:09:07]Recv from adsf: ssb to chan: a
+[INFO][2024-02-06 11:09:07]Recv from adsf: b to chan: a
+[INFO][2024-02-06 11:09:07]Recv from adsf: s to chan: a
+[INFO][2024-02-06 11:09:08]Recv from adsf: asd to chan: a
+[INFO][2024-02-06 11:09:08]Recv from adsf: sa to chan: a
+[INFO][2024-02-06 11:09:08]Recv from adsf: d to chan: a
+[INFO][2024-02-06 11:09:09]Recv from adsf: asd to chan: a
+[INFO][2024-02-06 11:09:09]Recv from adsf: as to chan: a
+[INFO][2024-02-06 11:09:09]Recv from adsf: d to chan: a
+[INFO][2024-02-06 11:09:09]Recv from adsf: sa to chan: a
+[INFO][2024-02-06 11:09:09]Recv from adsf: a to chan: a
+[INFO][2024-02-06 11:09:10]Recv from adsf: da to chan: a
+[INFO][2024-02-06 11:09:10]Recv from adsf: s to chan: a
+[INFO][2024-02-06 11:09:10]Recv from adsf: dsa to chan: a
+[INFO][2024-02-06 11:09:14]Recv from [Server]: adsf Exited the channel to chan: a
+[INFO][2024-02-06 11:09:16]Recv from [Server]: adsf Joined the channel to chan: a
+[INFO][2024-02-06 11:09:24]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:09:25]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:09:25]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:09:25]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:09:26]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:09:26]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:09:26]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:09:26]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:09:27]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:09:28]Recv from adsf: 6666666666666666666666 to chan: a
+[INFO][2024-02-06 11:09:29]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:09:29]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:09:29]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:09:30]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:09:30]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:09:30]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:09:30]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:09:31]Recv from adsf: 66 to chan: a
+[INFO][2024-02-06 11:09:31]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:09:31]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:09:31]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:09:32]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:09:32]Recv from adsf: 6 to chan: a
+[INFO][2024-02-06 11:09:39]Disconnect from 127.0.0.1:59960
+[INFO][2024-02-06 11:09:39]Recv from [Server]: adsf Exited the channel to chan: a
+[INFO][2024-02-06 11:13:14]Connect to 127.0.0.1:48248
+[INFO][2024-02-06 11:13:15]127.0.0.1:48248 set name: asd
+[INFO][2024-02-06 11:13:16]Recv from [Server]: asd Joined the channel to chan: a
+[INFO][2024-02-06 11:13:41]Disconnect from 127.0.0.1:48248
+[INFO][2024-02-06 11:13:41]Recv from [Server]: asd Exited the channel to chan: a
+[INFO][2024-02-06 11:13:58]Connect to 127.0.0.1:40926
+[INFO][2024-02-06 11:13:59]127.0.0.1:40926 set name: asdasd
+[INFO][2024-02-06 11:14:01]Recv from [Server]: asdasd Joined the channel to chan: a
+[INFO][2024-02-06 11:14:10]Recv from asdasd: 6 to chan: a
+[INFO][2024-02-06 11:14:11]Recv from asdasd: 6 to chan: a
+[INFO][2024-02-06 11:14:11]Recv from asdasd: 6 to chan: a
+[INFO][2024-02-06 11:14:11]Recv from asdasd: 6 to chan: a
+[INFO][2024-02-06 11:14:12]Recv from asdasd: 6 to chan: a
+[INFO][2024-02-06 11:14:12]Recv from asdasd: 6 to chan: a
+[INFO][2024-02-06 11:14:12]Recv from asdasd: 6 to chan: a
+[INFO][2024-02-06 11:14:12]Recv from asdasd: 6 to chan: a
+[INFO][2024-02-06 11:14:13]Recv from asdasd: 6 to chan: a
+[INFO][2024-02-06 11:14:13]Recv from asdasd: 6 to chan: a
+[INFO][2024-02-06 11:14:13]Recv from asdasd: 6 to chan: a
+[INFO][2024-02-06 11:14:13]Recv from asdasd: 6 to chan: a
+[INFO][2024-02-06 11:14:13]Recv from asdasd: 6 to chan: a
+[INFO][2024-02-06 11:14:14]Recv from asdasd: 66 to chan: a
+[INFO][2024-02-06 11:14:14]Recv from asdasd: 6 to chan: a
+[INFO][2024-02-06 11:14:19]Recv from [Server]: asdasd Exited the channel to chan: a
+[INFO][2024-02-06 11:14:21]Recv from [Server]: asdasd Joined the channel to chan: a
+[INFO][2024-02-06 11:14:51]Recv from asdasd: 6 to chan: a
+[INFO][2024-02-06 11:14:51]Recv from asdasd: 6 to chan: a
+[INFO][2024-02-06 11:14:52]Recv from asdasd: 6 to chan: a
+[INFO][2024-02-06 11:14:52]Recv from asdasd: 6 to chan: a
+
+[ERROR][2024-02-06 11:15:26]The port or address already use
+[INFO][2024-02-06 11:15:26]Listen on 127.0.0.1:6999
+[INFO][2024-02-06 11:15:26]Server Started
+
+[ERROR][2024-02-06 11:15:39]The port or address already use
+[INFO][2024-02-06 11:15:39]Listen on 127.0.0.1:6999
+[INFO][2024-02-06 11:15:39]Server Started
