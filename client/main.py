@@ -172,8 +172,7 @@ class mainclient(object):
                         printf(helpitem.format("records","/records <chan>","Get the records from server"))
 
                     elif args[0] == '/say':
-                        text = get[6+len(args[1]):]
-                        text.replace("\\", "\\\\")
+                        text = get[6+len(args[1]):].replace("\\", "\\\\")
                         
                         if connserver():
                             self.sendmsg(text, args[1])
@@ -258,8 +257,7 @@ class mainclient(object):
                     printf("Parameters less than needs")
 
             else:
-                text = get
-                text.replace("\\", "\\\\")
+                text = get.replace("\\", "\\\\")
                 
                 if connserver():
                     self.sendmsg(text, default_chan)

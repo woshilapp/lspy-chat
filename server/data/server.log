@@ -8,3 +8,87 @@
 
 [INFO][2024-02-07 18:33:52]Listen on 127.0.0.1:6999
 [INFO][2024-02-07 18:33:52]Server Started
+
+[INFO][2024-02-08 00:35:17]Listen on 127.0.0.1:6999
+[INFO][2024-02-08 00:35:17]Server Started
+
+[INFO][2024-02-08 00:35:54]Listen on 127.0.0.1:6999
+[INFO][2024-02-08 00:35:54]Server Started
+[INFO][2024-02-08 00:36:21]Connect to 127.0.0.1:41750
+[INFO][2024-02-08 00:36:23]127.0.0.1:41750 set name: asdad
+[INFO][2024-02-08 00:36:26]Recv from [Server]: asdad Joined the channel to chan: a
+[INFO][2024-02-08 00:36:43]Recv from asdad: / to chan: a
+[INFO][2024-02-08 00:36:44]Recv from asdad: / to chan: a
+[INFO][2024-02-08 00:36:44]Recv from asdad: / to chan: a
+[INFO][2024-02-08 00:36:47]Recv from asdad: asdsa to chan: a
+[INFO][2024-02-08 00:36:49]Recv from asdad: nbb to chan: a
+[INFO][2024-02-08 00:36:52]Recv from asdad: zc to chan: a
+[INFO][2024-02-08 00:36:54]Disconnect from 127.0.0.1:41750
+[INFO][2024-02-08 00:36:54]Recv from [Server]: asdad Exited the channel to chan: a
+[INFO][2024-02-08 00:36:59]Connect to 127.0.0.1:33800
+[INFO][2024-02-08 00:37:04]127.0.0.1:33800 set name: asdad
+[INFO][2024-02-08 00:37:08]Recv from [Server]: asdad Joined the channel to chan: a
+[INFO][2024-02-08 00:37:10]Recv from asdad: 
+ to chan: a
+[INFO][2024-02-08 00:37:59]Recv from [Server]: nb to chan: *
+[INFO][2024-02-08 00:56:28]Disconnect from 127.0.0.1:33800
+[INFO][2024-02-08 00:56:28]Recv from [Server]: asdad Exited the channel to chan: a
+[INFO][2024-02-08 00:57:38]Connect to 127.0.0.1:32986
+[INFO][2024-02-08 00:57:45]127.0.0.1:32986 set name: a
+[INFO][2024-02-08 00:57:49]Recv from [Server]: a Joined the channel to chan: a
+[INFO][2024-02-08 00:57:52]Recv from a: \ to chan: a
+[INFO][2024-02-08 00:58:00]Recv from a: \ to chan: a
+[INFO][2024-02-08 00:58:00]Recv from a: \ to chan: a
+[INFO][2024-02-08 00:58:01]Recv from a: \ to chan: a
+[INFO][2024-02-08 00:58:02]Recv from a: \ to chan: a
+[INFO][2024-02-08 00:58:03]Recv from a: \ to chan: a
+[INFO][2024-02-08 00:58:03]Recv from a: \ to chan: a
+[INFO][2024-02-08 00:58:04]Recv from a: \ to chan: a
+[INFO][2024-02-08 00:59:28]Disconnect from 127.0.0.1:32986
+[INFO][2024-02-08 00:59:28]Recv from [Server]: a Exited the channel to chan: a
+
+[INFO][2024-02-08 01:01:26]Listen on 127.0.0.1:6999
+[INFO][2024-02-08 01:01:26]Server Started
+[INFO][2024-02-08 01:01:36]Connect to 127.0.0.1:48748
+[INFO][2024-02-08 01:01:40]127.0.0.1:48748 set name: asd
+[INFO][2024-02-08 01:01:46]Recv from [Server]: asd Joined the channel to chan: a
+[INFO][2024-02-08 01:01:52]Recv from asd: 6 to chan: a
+[INFO][2024-02-08 01:01:53]Recv from asd: 6 to chan: a
+[INFO][2024-02-08 01:01:53]Recv from asd: 6 to chan: a
+[INFO][2024-02-08 01:01:53]Recv from asd: 66 to chan: a
+[INFO][2024-02-08 01:01:54]Recv from asd: \ to chan: a
+[INFO][2024-02-08 01:01:55]Recv from asd: \\\ to chan: a
+[INFO][2024-02-08 01:01:58]Recv from asd: \\nb to chan: a
+[INFO][2024-02-08 01:02:01]Recv from asd: haohaohao to chan: a
+[INFO][2024-02-08 01:02:04]Recv from asd: xiu fu le to chan: a
+[INFO][2024-02-08 01:02:07]Recv from asd: sha bi json to chan: a
+[INFO][2024-02-08 01:02:23]Recv from [Server]: \\\\\\duiduidui to chan: *
+[INFO][2024-02-08 01:02:30]Recv from asd: zc to chan: a
+[INFO][2024-02-08 01:02:39]Disconnect from 127.0.0.1:48748
+[INFO][2024-02-08 01:02:39]Recv from [Server]: asd Exited the channel to chan: a
+
+[INFO][2024-02-08 01:03:44]Listen on 127.0.0.1:6999
+[INFO][2024-02-08 01:03:44]Server Started
+[INFO][2024-02-08 01:03:55]Connect to 127.0.0.1:48194
+[INFO][2024-02-08 01:03:58]127.0.0.1:48194 set name: asdf
+[INFO][2024-02-08 01:04:01]Recv from [Server]: asdf Joined the channel to chan: a
+[INFO][2024-02-08 01:04:15]Recv from [Server]: asdf Joined the channel to chan: c
+[INFO][2024-02-08 01:05:19]Disconnect from 127.0.0.1:48194
+[INFO][2024-02-08 01:05:19]Recv from [Server]: asdf Exited the channel to chan: a
+[INFO][2024-02-08 01:05:19]Recv from [Server]: asdf Exited the channel to chan: c
+[INFO][2024-02-08 01:05:22]Connect to 127.0.0.1:57552
+[INFO][2024-02-08 01:05:23]127.0.0.1:57552 set name: asdf
+[INFO][2024-02-08 01:05:27]Recv from [Server]: asdf Joined the channel to chan: a
+[INFO][2024-02-08 01:05:32]Recv from [Server]: asdf Joined the channel to chan: c
+[INFO][2024-02-08 01:05:46]Disconnect from 127.0.0.1:57552
+[INFO][2024-02-08 01:05:46]Recv from [Server]: asdf Exited the channel to chan: a
+[INFO][2024-02-08 01:05:46]Recv from [Server]: asdf Exited the channel to chan: c
+[INFO][2024-02-08 01:07:08]Connect to 127.0.0.1:52988
+[INFO][2024-02-08 01:07:11]127.0.0.1:52988 set name: sdfa
+[INFO][2024-02-08 01:07:13]Recv from [Server]: sdfa Joined the channel to chan: a
+[INFO][2024-02-08 01:07:20]Recv from [Server]: sdfa Joined the channel to chan: c
+[INFO][2024-02-08 01:07:27]Recv from sdfa: 6666 to chan: c
+[INFO][2024-02-08 01:07:33]Recv from sdfa: nb to chan: c
+[INFO][2024-02-08 01:07:39]Disconnect from 127.0.0.1:52988
+[INFO][2024-02-08 01:07:39]Recv from [Server]: sdfa Exited the channel to chan: a
+[INFO][2024-02-08 01:07:39]Recv from [Server]: sdfa Exited the channel to chan: c

@@ -182,7 +182,9 @@ def p201(conn, data): #client msg
         conn.send("{\"t\":\"307\"}".encode('utf-8'))
 
     else:
-        text = "{\"t\":\"400\", \"m\":\"" + data["m"] + "\", \"u\":\"" + online[conn] + "\", \"c\": \"" + data["c"] + "\"}"
+        msg = data["m"].replace("\\", "\\\\")
+
+        text = "{\"t\":\"400\", \"m\":\"" + msg + "\", \"u\":\"" + online[conn] + "\", \"c\": \"" + data["c"] + "\"}"
         for u in cm.chand[data["c"]]:
             online[u].send(text.encode('utf-8'))
         logger.info("Recv from "+online[conn]+": "+data["m"]+" to chan: "+data["c"])
@@ -398,14 +400,12 @@ def cli():
                 exitt = False
 
             if args[0] == "saya":
-                intext = input_text[5:]
-                intext.replace("\\", "\\\\")
+                intext = input_text[5:].replace("\\", "\\\\")
 
                 server_msg("*", intext)
 
             elif args[0] == "say":
-                intext = input_text[5+len(args[1]):]
-                intext.replace("\\", "\\\\")
+                intext = input_text[5+len(args[1]):].replace("\\", "\\\\")
                 
                 server_msg(args[1], intext)
 

@@ -162,7 +162,7 @@ def sendata(msg):
     sock.send(str(msg).encode('utf-8'))
     
 def sendmsg(msg):
-    msg.replace("\\", "\\\\")
+    msg = msg.replace("\\", "\\\\")
     text = "{\"t\":\"201\", \"m\":\"" + msg + "\", \"c\": \"" + chan_listbox.get(chan_listbox.curselection()[0]) + "\"}"
     sendata(text)
 
@@ -190,7 +190,7 @@ def recvthread():
     global sock, recvth, channels
     while True:
         try:
-            data = sock.recv(512).decode("utf-8")
+            data = sock.recv(200).decode("utf-8")
             if data == '':
                 change_onli("")
                 recvth = Thread(target=recvthread,daemon=True)
