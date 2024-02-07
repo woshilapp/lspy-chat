@@ -3,7 +3,7 @@ import tkinter.ttk as ttk
 import tkinter.messagebox as tkmsgbox
 from threading import Thread
 from queue import Queue
-import socket, json, re, os
+import socket, json, re, os, time
 
 root = tk.Tk()
 root.geometry("900x580")
@@ -190,7 +190,7 @@ def recvthread():
     global sock, recvth, channels
     while True:
         try:
-            data = sock.recv(1024).decode("utf-8")
+            data = sock.recv(512).decode("utf-8")
             if data == '':
                 change_onli("")
                 recvth = Thread(target=recvthread,daemon=True)
@@ -266,6 +266,7 @@ def procthread():
                     init_chan(data["c"])
                     chan_listbox.insert("end", data["c"])
                     chan_listbox.select_set(0)
+                    time.sleep(0.45) #too fast and badpacket
                     sendata("{\"t\": \"206\", \"c\": \"" + data["c"] + "\"}")
 
                 channels[data["c"]][0] += "<" + data["u"] + ">" + data["m"] + "\n"
@@ -279,6 +280,7 @@ def procthread():
                     init_chan(data["c"])
                     chan_listbox.insert("end", data["c"])
                     chan_listbox.select_set(0)
+                    time.sleep(0.45) #too fast and badpacket
                     sendata("{\"t\": \"206\", \"c\": \"" + data["c"] + "\"}")
 
                 channels[data["c"]][0] += "[Server]" + data["m"] + "\n"

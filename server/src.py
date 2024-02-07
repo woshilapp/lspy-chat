@@ -203,7 +203,7 @@ class RecordsManager():
             if name not in self.records.keys():
                 self.records[name] = ""
 
-            self.records[name] += text + "\n"
+            self.records[name] += text + "\\n"
 
         return ""
 

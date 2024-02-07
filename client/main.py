@@ -110,13 +110,13 @@ class mainclient(object):
                     text = "records from " + data["c"] + ":\n" + data["m"]
                     printf(text)
 
-            except json.decoder.JSONDecodeError:
-                print("json",msg)
+            except json.decoder.JSONDecodeError as e:
+                print("json",msg,e)
                 printf("Recv Badpackets")
                 continue
 
-            except KeyError:
-                print("key",msg)
+            except KeyError as e:
+                print("key",msg,e)
                 printf("Recv Badpackets")
                 continue
 
@@ -258,7 +258,7 @@ class mainclient(object):
                     printf("Parameters less than needs")
 
             else:
-                text = get[6+len(args[1]):]
+                text = get
                 text.replace("\\", "\\\\")
                 
                 if connserver():

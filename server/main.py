@@ -278,7 +278,7 @@ def p206(conn, data): #client get records
         conn.send("{\"t\":\"307\"}".encode('utf-8'))
         return 0
 
-    text = "{\"t\": \"420\", \"c\": \"" + data["c"] + "\", \"m\": \"" + rm.get_text(data["c"])[:-1] + "\"}"
+    text = "{\"t\": \"420\", \"c\": \"" + data["c"] + "\", \"m\": \"" + rm.get_text(data["c"])[:-2] + "\"}"
 
     conn.send(text.encode("utf-8"))
 
@@ -350,7 +350,7 @@ def recv_thread(conn):
         while exitt and connlist[conn]:
             try:
                 time.sleep(slt)
-                data = conn.recv(10240).decode('utf-8')
+                data = conn.recv(1024).decode('utf-8')
                 if data != None and data != "":
                     # logger.debug(data)
                     js = json.loads(data)
@@ -446,8 +446,8 @@ def cli():
             elif args[0] == "rdclean": #rdclean %channel%
                 rm.clean_text(args[1])
 
-            # elif args[0] == "eval":
-            #     eval(args[1])
+            elif args[0] == "eval":
+                eval(args[1])
         
         except Exception:
             pass
