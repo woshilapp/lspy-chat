@@ -9,6 +9,7 @@ A Chat Application Based on Tepy-Chat. High performance, High concurrence. And S
 + Kick user (or IP)
 + Ban user (or IP)
 + Channels
++ records
 
 ## Licence
 
@@ -40,6 +41,7 @@ In server command line, it hasn't help message. So I wrote at it :\)
 | unbanip | Unban the IP Address from server | unbanip \<IP Address\> |
 | chanper | Change the channel permission (black or white list) | chanper \<chan\>  b/w |
 | userper | Change the name permission (add or remove from permission list) | userper \<nickname\> add/del \<channel\> |
+| rdclean | Clean the records (the channel) | rdclean \<channel\> |
 
 When not connected, the ban still work. 
 And pay attention to capitalization!
@@ -59,7 +61,7 @@ Second:
     Type your nickname to "Nickname" Entry, and click "Set" Button (after you connected)
 
 Third:
-    Click the "Channels" on the toolbar and choose your channel to join
+    Click the "Channels" on the toolbar and choose your channel to join, and it will get record automatically
 
 Last:
     Start your chat

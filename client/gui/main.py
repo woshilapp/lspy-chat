@@ -3,7 +3,7 @@ import tkinter.ttk as ttk
 import tkinter.messagebox as tkmsgbox
 from threading import Thread
 from queue import Queue
-import socket, json, re, os
+import socket, json, re, os, time
 
 root = tk.Tk()
 root.geometry("900x580")
@@ -162,6 +162,7 @@ def sendata(msg):
     sock.send(str(msg).encode('utf-8'))
     
 def sendmsg(msg):
+    msg = msg.replace("\\", "\\\\")
     text = "{\"t\":\"201\", \"m\":\"" + msg + "\", \"c\": \"" + chan_listbox.get(chan_listbox.curselection()[0]) + "\"}"
     sendata(text)
 
@@ -174,12 +175,12 @@ def connserver():
 
 def to_channel():
     if connserver():
-        sendata(json.dumps({"t": "204", "c": chan_selbox1.get()}))
+        sendata(json.dumps({"t": "204", "c": chan_selbox1.get()}, ensure_ascii=False))
 
 def exc_channel():
     if connserver():
         if chan_selbox1.get() in channels.keys():
-            sendata(json.dumps({"t": "205", "c": chan_selbox1.get()}))
+            sendata(json.dumps({"t": "205", "c": chan_selbox1.get()}, ensure_ascii=False))
             channels.pop(chan_selbox1.get())
             chan_listbox.delete(chan_listbox.get(0, tk.END).index(chan_selbox1.get()))
             msg_textbox.delete(1.0, tk.END)
@@ -189,7 +190,7 @@ def recvthread():
     global sock, recvth, channels
     while True:
         try:
-            data = sock.recv(512).decode("utf-8")
+            data = sock.recv(200).decode("utf-8")
             if data == '':
                 change_onli("")
                 recvth = Thread(target=recvthread,daemon=True)
@@ -265,6 +266,8 @@ def procthread():
                     init_chan(data["c"])
                     chan_listbox.insert("end", data["c"])
                     chan_listbox.select_set(0)
+                    time.sleep(0.45) #too fast and badpacket
+                    sendata("{\"t\": \"206\", \"c\": \"" + data["c"] + "\"}")
 
                 channels[data["c"]][0] += "<" + data["u"] + ">" + data["m"] + "\n"
 
@@ -277,6 +280,8 @@ def procthread():
                     init_chan(data["c"])
                     chan_listbox.insert("end", data["c"])
                     chan_listbox.select_set(0)
+                    time.sleep(0.45) #too fast and badpacket
+                    sendata("{\"t\": \"206\", \"c\": \"" + data["c"] + "\"}")
 
                 channels[data["c"]][0] += "[Server]" + data["m"] + "\n"
                 sendata("{\"t\": \"202\", \"c\": \"" + data["c"] + "\"}") #because new user will recv it
@@ -297,6 +302,11 @@ def procthread():
                 l = data["l"].split(",")
                 chan_selbox1['value'] = tuple(l)
                 chan_selbox1.current(0)
+
+            elif data["t"] == "420":
+                channels[data["c"]][0] = data["m"] + "\n"
+
+                change_textbox(channels[chan_listbox.get(chan_listbox.curselection()[0])][0])
 
         except json.decoder.JSONDecodeError:
             printf("json Recv Badpackets: "+msg)

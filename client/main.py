@@ -14,7 +14,7 @@ sock.setblocking(True)
 
 class MyCompleter(Completer):
     def get_completions(self, document, complete_event):
-        words = ['/help','/say','/list','/listchan','/enter','/esc','/setname','/exit','/connect','/disconnect','/default'] #添加以/开头的命令
+        words = ['/help','/say','/list','/listchan','/enter','/esc','/setname','/exit','/connect','/disconnect','/default','/records'] #添加以/开头的命令
         word_before_cursor = document.get_word_before_cursor(WORD=True)
         for word in words:
             if word.startswith(word_before_cursor):
@@ -106,13 +106,17 @@ class mainclient(object):
                     text = "channels:" + data["l"]
                     printf(text)
 
-            except json.decoder.JSONDecodeError:
-                print("json",msg)
+                elif data["t"] == "420":
+                    text = "records from " + data["c"] + ":\n" + data["m"]
+                    printf(text)
+
+            except json.decoder.JSONDecodeError as e:
+                print("json",msg,e)
                 printf("Recv Badpackets")
                 continue
 
-            except KeyError:
-                print("key",msg)
+            except KeyError as e:
+                print("key",msg,e)
                 printf("Recv Badpackets")
                 continue
 
@@ -165,10 +169,13 @@ class mainclient(object):
                         printf(helpitem.format("connect","/connect <ip>:<port>","Connect to server"))
                         printf(helpitem.format("disconnect","/disconnect","Disconnect from server"))
                         printf(helpitem.format("exit","/exit","Exit from this program"))
+                        printf(helpitem.format("records","/records <chan>","Get the records from server"))
 
                     elif args[0] == '/say':
+                        text = get[6+len(args[1]):].replace("\\", "\\\\")
+                        
                         if connserver():
-                            self.sendmsg(get[6+len(args[1]):], args[1])
+                            self.sendmsg(text, args[1])
                         else:
                             printf("say:Not connected to server")
                     
@@ -229,6 +236,13 @@ class mainclient(object):
                         else:
                             printf("esc:Not connected to server")
 
+                    elif args[0] == '/records':
+                        if connserver():
+                            text = "{\"t\":\"206\", \"c\":\"" + args[1] + "\"}"
+                            self.sendata(text)
+                        else:
+                            printf("records:Not connected to server")
+
                     elif args[0] == '/default':
                         default_chan = args[1]
 
@@ -243,8 +257,10 @@ class mainclient(object):
                     printf("Parameters less than needs")
 
             else:
+                text = get.replace("\\", "\\\\")
+                
                 if connserver():
-                    self.sendmsg(get, default_chan)
+                    self.sendmsg(text, default_chan)
                 else:
                     printf("say:Not connected to server")
 

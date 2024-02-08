@@ -4,6 +4,7 @@ c202: list online (c)
 c203: list chan 
 c204: enter chan (c)
 c205: exit chan (c)
+c206: get record (c)
 
 s300: set suss
 s301: already set
@@ -21,3 +22,4 @@ s400: client msg (m, u, c)
 s401: server msg (m, c)
 s410: online list (c, l)
 s411: chan list (l)
+s420: records (m, c)

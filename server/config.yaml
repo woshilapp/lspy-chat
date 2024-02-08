@@ -3,5 +3,8 @@ network:
   ip : "127.0.0.1"
   port : 6999
 
-log:
-  enable : true
+records:
+  enable: true
+
+# log: unavailable
+#   enable : true
